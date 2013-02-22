@@ -10,5 +10,17 @@ home = Blueprint('home', __name__, template_folder='templates')
 @home.route('/', methods=['GET', 'POST'])
 def index():
     repositories = Repository.query.order_by('-forks').all()
+    organizations = Organization.query.all()
 
-    return render_template('home/index.html', repositories=repositories)
+    context = {
+        'repositories': repositories,
+        'organizations': organizations
+    }
+
+    return render_template('home/index.html', **context)
+
+@home.route('/repo/<slug>', methods=['GET', 'POST'])
+def repo(slug):
+    repository = Repository.query.filter_by(id=slug).first()
+
+    return render_template('home/repo.html', repository=repository)

@@ -12,6 +12,11 @@ class Organization(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     username = db.Column(db.String(50), unique=True)
+    slug = db.Column(db.String(50), unique=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.username)
+        super(Organization, self).save(*args, **kwargs)
 
     def __repr__(self):
         return '<Organization %s>' % self.name
@@ -28,6 +33,12 @@ class Repository(db.Model):
     organization_id = db.Column(db.Integer, db.ForeignKey('organization.id'))
     organization = db.relationship('Organization',
         backref=db.backref('repositories', lazy='dynamic'))
+    users = db.relationship("User", secondary="commit")
+    slug = db.Column(db.String(50), unique=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Repository, self).save(*args, **kwargs)
 
     def __repr__(self):
         return '<Repository %s>' % self.name
@@ -52,6 +63,12 @@ class User(db.Model):
     gh_id = db.Column(db.Integer)
     login = db.Column(db.String(70))
     avatar_url = db.Column(db.String(255))
+    slug = db.Column(db.String(50), unique=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.login)
+        super(User, self).save(*args, **kwargs)
+
 
     def __repr__(self):
         return '<User %s>' % self.login

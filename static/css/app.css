@@ -1,0 +1,63 @@
+body {
+    padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+}
+
+ul.filter {
+    list-style: none;
+    margin: 0;
+}
+
+ul.filter li {
+    margin: 5px 0;
+    clear: both;
+}
+
+ul.filter input {
+    float: left;
+}
+
+ul.filter label {
+    padding-left: 20px;
+    font-size: 12px;
+}
+
+a .project {
+    color: #000;
+}
+
+a:hover .project {
+    background: #f6f6f6;
+}
+
+.project {
+    width: 210px;
+    float: left;
+    border: 1px solid #CCC;
+    height: 100px;
+    margin: 3px;
+    padding: 5px 5px;
+    position: relative;
+    -webkit-border-radius: 6px;
+       -moz-border-radius: 6px;
+            border-radius: 6px;
+}
+
+.project h5 {
+    margin: 0;
+}
+
+.project p {
+    font-size: 12px;
+}
+
+.project div.info {
+    font-size: 11px;
+    position: absolute;
+    bottom: 0;
+    text-align: right;
+    width: 94%;
+}
+
+.project div.info i {
+    margin-top: -2px;
+}

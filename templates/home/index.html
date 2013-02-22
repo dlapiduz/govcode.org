@@ -1,6 +1,38 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-
+    <div class="row">
+        <div class="span9">
+            <h1>Projects</h1>
+            {% for repository in repositories %}
+                <a href="{{ url_for('home.repo', slug=repository.id) }}">
+                    <div class="project" data-org="{{ repository.organization.id }}">
+                        <h5>{{ repository.name }}</h5>
+                        <p>{{ repository.description|string|truncate(70, false)|safe }}</p>
+                        <div class="info">
+                            <i class="icon-user"></i> {{ repository.organization.username }}
+                            <i class="icon-bookmark"></i> {{ repository.forks }}
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+        <div class="span3">
+            <h3>Filter by Agency</h3>
+            <span class="filters">
+                <a href="#" id="filter_show_all">Select all</a> | 
+                <a href="#" id="filter_show_none">Select none</a>
+            </span>
+            <ul class="filter">
+                {% for organization in organizations %}
+                    <li>
+                        <input type="checkbox" value="{{ organization.id }}" checked="checked" id="agency_{{ organization.id }}">
+                        <label for="agency_{{ organization.id }}">
+                            {{ organization.name }}
+                        </label>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 {% endblock %}
