@@ -1,0 +1,11 @@
+Flask==0.9
+Flask-Script==0.5.2
+Flask-Testing==0.4
+Jinja2==2.6
+Werkzeug==0.8.3
+distribute==0.6.31
+factory-boy==1.2.0
+nose==1.2.1
+Flask-SQLAlchemy
+psycopg2
+gunicorn
