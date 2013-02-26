@@ -3,13 +3,41 @@
 {% block content %}
     <div class="row">
         <div class="span9">
-            <h1>{{ repository.name }}</h1>
+            <h1>
+                <a href="http://github.com/{{repository.organization.username}}/{{ repository.name }}" target="_BLANK">
+                    {{repository.organization.username}}/{{ repository.name }}
+                </a>
+            </h1>
+            <table class="table">
+                <tr>
+                    <th>Date</th>
+                    <th>Message</th>
+                    <th>User</th>
+                    <th>SHA</th>
+                </tr>
+                {% for commit in repository.commits %}
+                    <tr>
+                        <td>{{ commit.date.strftime('%m-%d-%Y') }}</td>
+                        <td>{{ commit.message }}</td>
+                        <td><a href="http://github.com/{{ commit.user.login }}" target="_BLANK">{{ commit.user.login }}</a></td>
+                        <td>
+                            <a href="http://github.com/{{repository.organization.username}}/{{repository.name}}/commit/{{ commit.sha }}" target="_BLANK">
+                                {{ commit.sha|truncate(7, True, '') }}
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
         </div>
         <div class="span3">
             <h3>Collaborators</h3>
             <ul class="collaborators">
                 {% for user in repository.users %}
-                    <li>{{ user.login }}</li>
+                    <li>
+                        <a href="http://github.com/{{ user.login }}" target="_BLANK">
+                            {{ user.login }}
+                        </a>
+                    </li>
                 {% endfor %}
             </ul>
         </div>
