@@ -4,6 +4,7 @@ from extensions import db
 from helpers import slugify
 import json
 from decimal import Decimal
+from sqlalchemy import event
 
 from collections import OrderedDict
 
@@ -12,11 +13,7 @@ class Organization(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     username = db.Column(db.String(50), unique=True)
-    slug = db.Column(db.String(50), unique=True)
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.username)
-        super(Organization, self).save(*args, **kwargs)
+    slug = db.Column(db.String(100), unique=True)
 
     def __repr__(self):
         return '<Organization %s>' % self.name
@@ -34,11 +31,7 @@ class Repository(db.Model):
     organization = db.relationship('Organization',
         backref=db.backref('repositories', lazy='dynamic'))
     users = db.relationship("User", secondary="commit")
-    slug = db.Column(db.String(50), unique=True)
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
-        super(Repository, self).save(*args, **kwargs)
+    slug = db.Column(db.String(100), unique=True)
 
     def __repr__(self):
         return '<Repository %s>' % self.name
@@ -63,13 +56,22 @@ class User(db.Model):
     gh_id = db.Column(db.Integer)
     login = db.Column(db.String(70))
     avatar_url = db.Column(db.String(255))
-    slug = db.Column(db.String(50), unique=True)
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.login)
-        super(User, self).save(*args, **kwargs)
-
+    slug = db.Column(db.String(70), unique=True)
 
     def __repr__(self):
         return '<User %s>' % self.login
 
+def add_slug(mapper, connection, target):
+    if isinstance(target, Organization):
+        target.slug = slugify(target.name)
+    elif isinstance(target, Repository):
+        target.slug = slugify("-".join([target.organization.username,target.name]))
+    elif isinstance(target, User):
+        target.slug = slugify(target.login)
+
+event.listen(Organization, 'before_insert', add_slug)
+event.listen(Organization, 'before_update', add_slug)
+event.listen(Repository, 'before_insert', add_slug)
+event.listen(Repository, 'before_update', add_slug)
+event.listen(User, 'before_insert', add_slug)
+event.listen(User, 'before_update', add_slug)
