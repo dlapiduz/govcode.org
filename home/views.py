@@ -10,7 +10,7 @@ home = Blueprint('home', __name__, template_folder='templates')
 @home.route('/', methods=['GET', 'POST'])
 def index():
     repositories = Repository.query.order_by('-forks').all()
-    organizations = Organization.query.all()
+    organizations = Organization.query.order_by('name').all()
 
     context = {
         'repositories': repositories,
