@@ -27,4 +27,4 @@ class TestConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = 'mysql://root@localhost/lmm_test'
 
 class ProdConfig(BaseConfig):
-    SQLALCHEMY_DATABASE_URI = os.getenv('HEROKU_POSTGRESQL_CHARCOAL_URL')
+    SQLALCHEMY_DATABASE_URI = os.getenv('PG_CONN_STR')
