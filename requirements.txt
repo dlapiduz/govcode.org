@@ -8,4 +8,5 @@ factory-boy==1.2.0
 nose==1.2.1
 Flask-SQLAlchemy
 psycopg2
-gunicorn
+requests
+pygithub3
