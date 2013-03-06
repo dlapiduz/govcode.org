@@ -8,6 +8,11 @@
                     {{repository.organization.username}}/{{ repository.name }}
                 </a>
             </h1>
+            <div class="description">
+                <p>
+                    {{ repository.description }}
+                </p>
+            </div>
             <table class="table">
                 <tr>
                     <th>Date</th>
@@ -18,7 +23,9 @@
                 {% for commit in repository.commits %}
                     <tr>
                         <td>{{ commit.date.strftime('%m-%d-%Y') }}</td>
-                        <td>{{ commit.message }}</td>
+                        <td>
+                            <pre>{{ commit.message }}</pre>
+                        </td>
                         <td><a href="http://github.com/{{ commit.user.login }}" target="_BLANK">{{ commit.user.login }}</a></td>
                         <td>
                             <a href="http://github.com/{{repository.organization.username}}/{{repository.name}}/commit/{{ commit.sha }}" target="_BLANK">
