@@ -3,7 +3,7 @@
 {% block content %}
     <div class="row">
         <div class="span9">
-            <h1>Projects</h1>
+            <h1>Goverment Open Source Projects</h1>
             {% for repository in repositories %}
                 <a href="{{ url_for('home.repo', slug=repository.id) }}">
                     <div class="project" data-org="{{ repository.organization.id }}">
