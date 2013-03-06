@@ -65,3 +65,8 @@ a:hover .project {
 .project div.info i {
     margin-top: -2px;
 }
+
+footer {
+    margin: 20px 0;
+    font-size: 12px;
+}
