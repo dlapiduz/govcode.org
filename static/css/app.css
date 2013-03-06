@@ -66,6 +66,17 @@ a:hover .project {
     margin-top: -2px;
 }
 
+.order {
+    float: right;
+    font-size: 12px;
+    margin-top: 20px;
+    margin-right: 20px;
+}
+
+.order a.active {
+    color: #000;
+}
+
 footer {
     margin: 20px 0;
     font-size: 12px;

@@ -5,6 +5,7 @@ from helpers import slugify
 import json
 from decimal import Decimal
 from sqlalchemy import event
+from sqlalchemy import desc
 
 from collections import OrderedDict
 
@@ -32,6 +33,9 @@ class Repository(db.Model):
         backref=db.backref('repositories', lazy='dynamic'))
     users = db.relationship("User", secondary="commit")
     slug = db.Column(db.String(100), unique=True)
+
+    def last_commit(self):
+        return self.commits.order_by(desc(Commit.date)).first()
 
     def __repr__(self):
         return '<Repository %s>' % self.name

@@ -14,6 +14,15 @@ $().ready(function() {
         swap_org($(this).attr('value'));
     })
 
+    $('.order a').click(function() {
+        if (!$(this).hasClass('active')) {
+            $('.order a').removeClass('active');
+            var sorter = $(this).attr('data-sort');
+            $('.container .project-box').tsort('div.project', {attr: sorter, order: 'desc', place: 'start'})
+            $(this).addClass('active');
+        }
+    });
+
 
 })
 

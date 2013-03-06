@@ -4,10 +4,21 @@
 {% block content %}
     <div class="row">
         <div class="span9">
+            <div class="order">
+                Sort by:
+                <a href="#" id="sort-forks" class="active" data-sort="data-forks">Forks</a> |
+                <a href="#" id="sort-recent" data-sort="data-latest">Recent</a>
+            </div>
+            
             <h1>Goverment Open Source Projects</h1>
+
             {% for repository in repositories %}
-                <a href="{{ url_for('home.repo', slug=repository.id) }}">
-                    <div class="project" data-org="{{ repository.organization.id }}">
+                <a href="{{ url_for('home.repo', slug=repository.id) }}" class="project-box">
+                    <div class="project" data-org="{{ repository.organization.id }}"
+                                         data-forks="{{ repository.forks }}"
+                                         {% if repository.last_commit().date %}
+                                            data-latest="{{ repository.last_commit().date.strftime('%Y%m%d%H%M') }}"
+                                         {% endif %}>
                         <h5>{{ repository.name }}</h5>
                         <p>{{ repository.description|string|truncate(70, false)|safe }}</p>
                         <div class="info">
