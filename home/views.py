@@ -18,8 +18,13 @@ def index():
 
     return render_template('home/index.html', **context)
 
-@home.route('/repo/<slug>', methods=['GET', 'POST'])
+@home.route('/repo/<slug>')
 def repo(slug):
     repository = Repository.query.filter_by(id=slug).first()
 
     return render_template('home/repo.html', repository=repository)
+
+@home.route('/contributors')
+def contributors():
+    users = User.query.order_by(desc(User.commit_count)).all()
+    return render_template('home/contributors.html', users=users)

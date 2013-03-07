@@ -4,8 +4,8 @@ from extensions import db
 from helpers import slugify
 import json
 from decimal import Decimal
-from sqlalchemy import event
-from sqlalchemy import desc
+from sqlalchemy import event, desc, func, select
+from sqlalchemy.ext.hybrid import hybrid_property
 
 from collections import OrderedDict
 
@@ -32,7 +32,7 @@ class Repository(db.Model):
     organization_id = db.Column(db.Integer, db.ForeignKey('organization.id'))
     organization = db.relationship('Organization',
         backref=db.backref('repositories', lazy='dynamic'))
-    users = db.relationship("User", secondary="commit")
+    users = db.relationship("User", secondary="commit", backref="repositories")
     slug = db.Column(db.String(100), unique=True)
 
     def last_commit(self):
@@ -62,6 +62,15 @@ class User(db.Model):
     login = db.Column(db.String(70))
     avatar_url = db.Column(db.String(255))
     slug = db.Column(db.String(70), unique=True)
+    commit_count = db.column_property(
+            select([func.count(Commit.id)]).\
+            where(Commit.user_id==id).\
+            correlate_except(Commit)
+    )
+
+    @hybrid_property
+    def organizations(self):
+        return list(set(repo.organization for repo in self.repositories))
 
     def __repr__(self):
         return '<User %s>' % self.login
