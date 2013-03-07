@@ -21,7 +21,7 @@
                         </td>
                         <td>
                             {% for org in user.organizations %}
-                                {{ org.name }}
+                                <a href="http://github.com/{{ org.username }}" target="_BLANK">{{ org.username }}</a>
                             {% endfor %}
                         </td>
                     </tr>
