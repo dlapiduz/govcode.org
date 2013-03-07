@@ -28,3 +28,7 @@ def repo(slug):
 def contributors():
     users = User.query.order_by(desc(User.commit_count)).all()
     return render_template('home/contributors.html', users=users)
+
+@home.route('/about')
+def about():
+    return render_template('home/about.html')
