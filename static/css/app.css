@@ -1,9 +1,36 @@
 body {
-    padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+    padding-top: 20px;
 }
 
 h1 {
     font-size: 25px;
+    margin: 0;
+    font-weight: normal;
+    border-bottom: 1px solid #CCC;
+}
+
+h1 small {
+    font-size: 14px;
+    font-style: italic;
+    color: #999;
+}
+
+h2 {
+    font-size: 22px;
+    font-weight: normal;
+    margin: 0;
+}
+
+h3 {
+    margin: 0;
+}
+
+ul.nav li a {
+    font-size: 14px;
+}
+
+ul.nav i {
+    font-size: 18px;
 }
 
 ul.filter {
@@ -33,6 +60,10 @@ a:hover .project {
     background: #f6f6f6;
 }
 
+.projects {
+    clear: both;
+}
+
 .project {
     width: 210px;
     float: left;
@@ -48,10 +79,15 @@ a:hover .project {
 
 .project h5 {
     margin: 0;
+    line-height: 16px;
+    font-size: 14px;
 }
 
 .project p {
     font-size: 12px;
+    color: #666;
+    line-height: 16px;
+    margin-top: 5px;
 }
 
 .project div.info {
@@ -60,6 +96,7 @@ a:hover .project {
     bottom: 0;
     text-align: right;
     width: 94%;
+    color: #333;
 }
 
 .project div.info i {

@@ -15,28 +15,32 @@
         <link href="{{ url_for('static', filename='css/app.css') }}" rel="stylesheet" media="screen">
     </head>
     <body>
+        <a href="https://github.com/dlapiduz/govcode"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
 
         {% set active_page = active_page|default('') -%}
 
-        <div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="navbar-inner">
-                <div class="container">
-                    <a class="brand" href="/">Govcode</a>
-                    <div class="nav-collapse collapse">
-                        <ul class="nav">
-                            <li{% if active_page == "index" %} class="active" {% endif %}><a href="/">Home</a></li>
-                        </ul>
-                    </div><!--/.nav-collapse -->
-                </div>
-            </div>
-        </div>
+
 
         <div class="container">
-                {% block content %}{% endblock %}
+            <div style="float: right;">
+                <ul class="nav nav-pills">
+                    <li{% if active_page == "index" %} class="active" {% endif %}><a href="/"><i class="icon-home"></i></a></li>
+                    <li{% if active_page == "other" %} class="active" {% endif %}><a href="/">Top Contributors</a></li>
+                    <li{% if active_page == "other" %} class="active" {% endif %}><a href="/">About</a></li>
+                </ul>
+            </div>
 
-                <footer>
-                        <p>This is not a goverment sponsored website. The code linked here belongs to each of the agencies.</p>
-                </footer>
+            <h1>
+                Govcode <small>Goverment Open Source Projects</small>
+            </h1>
+
+            <div class="clear: both;">&nbsp;</div>
+
+            {% block content %}{% endblock %}
+
+            <footer>
+                    <p>This is not a goverment sponsored website. The code linked here belongs to each of the agencies.</p>
+            </footer>
         </div> <!-- /container -->
 
         <!-- Le javascript
