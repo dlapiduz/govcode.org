@@ -12,7 +12,7 @@ class GhImport(Command):
 
     def run(self):
         self.get_orgs()
-        for org in Organization.query.all():
+        for org in Organization.query.filter_by(ignore=False).all():
             self.get_repos(org)
             print org
         for repo in Repository.query.all():

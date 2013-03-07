@@ -15,6 +15,7 @@ class Organization(db.Model):
     name = db.Column(db.String(100))
     username = db.Column(db.String(50), unique=True)
     slug = db.Column(db.String(100), unique=True)
+    ignore = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return '<Organization %s>' % self.name
