@@ -7,7 +7,10 @@ def create_app(config=None):
     app = Flask(__name__)
 
     if config is None:
-        config = DevConfig
+        if getenv('PROD') == '1':
+            config = ProdConfig
+        else:
+            config = DevConfig
 
     app.config.from_object(config)
     cache.init_app(app, config=config.CACHE_CONFIG)

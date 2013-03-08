@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0, '/var/www/govcode.org')
+sys.path.insert(0, '/www/govcode.org')
 
 from app import create_app
 from config import ProdConfig
