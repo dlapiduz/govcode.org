@@ -45,22 +45,25 @@ class GhImport(Command):
             print 'Error importing organizations'
 
     def get_repos(self, org):
-        repos = self.gh.repos.list_by_org(org.username).all()
-        for repo in repos:
-            if not repo.fork:
-                r = Repository.query.filter_by(gh_id=repo.id).first()
-                if r is None:
-                    r = Repository()
-                r.organization = org
-                r.gh_id = repo.id
-                r.name = repo.name
-                r.description = repo.description
-                r.forks = repo.forks
-                r.watchers = repo.watchers
-                r.size = repo.size
-                r.open_issues = repo.open_issues
-                db.session.add(r)
-        db.session.commit()
+        try:
+            repos = self.gh.repos.list_by_org(org.username).all()
+            for repo in repos:
+                if not repo.fork:
+                    r = Repository.query.filter_by(gh_id=repo.id).first()
+                    if r is None:
+                        r = Repository()
+                    r.organization = org
+                    r.gh_id = repo.id
+                    r.name = repo.name
+                    r.description = repo.description
+                    r.forks = repo.forks
+                    r.watchers = repo.watchers
+                    r.size = repo.size
+                    r.open_issues = repo.open_issues
+                    db.session.add(r)
+            db.session.commit()
+        except:
+            print 'error ' + org.name
 
     def get_commits(self, repo):
         last_commit = repo.commits.order_by(Commit.date.desc()).first()
