@@ -1,16 +1,18 @@
 from flask import Flask
 from config import DevConfig, ProdConfig
-from extensions import db
+from extensions import db, cache
 from os import getenv
 
 def create_app(config=None):
     app = Flask(__name__)
 
-    app.config.from_object(DevConfig)
-    if config is not None:
-        app.config.from_object(config)
+    if config is None:
+        config = DevConfig
 
+    app.config.from_object(config)
+    cache.init_app(app, config=config.CACHE_CONFIG)
     db.init_app(app)
+
     register_blueprints(app)
 
     return app

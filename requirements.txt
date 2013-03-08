@@ -8,5 +8,6 @@ factory-boy==1.2.0
 nose==1.2.1
 Flask-SQLAlchemy
 psycopg2
-requests
+requests==0.14.0
 pygithub3
+Flask-Cache
