@@ -18,7 +18,13 @@
                                                 data-latest="{{ repository.last_commit.date.strftime('%Y%m%d%H%M') }}"
                                              {% endif %}>
                             <h5>{{ repository.name }}</h5>
-                            <p>{{ repository.description|string|truncate(70, false)|safe }}</p>
+                            <p>
+                                {{ repository.description|string|truncate(70, false)|safe }}
+                            </p>
+                            <span>
+                                View Commits
+                            </span>
+                            
                             <div class="info">
                                 <i class="icon-user"></i> {{ repository.organization.username }}
                                 <i class="icon-git-fork"></i> {{ repository.forks }}

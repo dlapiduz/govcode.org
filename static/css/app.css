@@ -65,7 +65,7 @@ a .project {
 }
 
 a:hover .project {
-    background: #f6f6f6;
+    background: #f9f9f9;
 }
 
 .projects {
@@ -95,7 +95,17 @@ a:hover .project {
     font-size: 12px;
     color: #666;
     line-height: 16px;
+    margin: 0;
     margin-top: 5px;
+}
+
+.project span {
+    color: #08c;
+    font-size: 12px;
+}
+
+.project span:hover {
+    text-decoration: underline;
 }
 
 .project div.info {
