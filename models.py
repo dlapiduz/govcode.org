@@ -35,6 +35,7 @@ class Repository(db.Model):
     users = db.relationship("User", secondary="commit", backref="repositories")
     slug = db.Column(db.String(100), unique=True)
 
+    @hybrid_property
     def last_commit(self):
         return self.commits.order_by(desc(Commit.date)).first()
 

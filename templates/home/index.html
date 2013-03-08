@@ -14,8 +14,8 @@
                     <a href="{{ url_for('home.repo', slug=repository.id) }}" class="project-box">
                         <div class="project" data-org="{{ repository.organization.id }}"
                                              data-forks="{{ repository.forks }}"
-                                             {% if repository.last_commit().date %}
-                                                data-latest="{{ repository.last_commit().date.strftime('%Y%m%d%H%M') }}"
+                                             {% if repository.last_commit.date %}
+                                                data-latest="{{ repository.last_commit.date.strftime('%Y%m%d%H%M') }}"
                                              {% endif %}>
                             <h5>{{ repository.name }}</h5>
                             <p>{{ repository.description|string|truncate(70, false)|safe }}</p>
