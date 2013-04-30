@@ -49,6 +49,8 @@
         <script src="{{ url_for('static', filename='js/jquery.tinysort.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 
+        {% block js %}{% endblock %}
+
         <script type="text/javascript">
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', 'UA-8480852-11']);

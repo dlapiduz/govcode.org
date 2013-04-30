@@ -16,7 +16,7 @@ class BaseConfig(object):
 
 class DevConfig(BaseConfig):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql://lapiduzd@localhost:5432/govcode_dev'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://diego@localhost:5432/govcode_dev'
     CACHE_CONFIG = { 'CACHE_TYPE': 'null' }
 
 

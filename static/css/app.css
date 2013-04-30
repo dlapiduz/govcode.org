@@ -136,3 +136,26 @@ footer {
     margin: 20px 0;
     font-size: 12px;
 }
+
+.stats div {
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #333;
+
+    margin-top: 10px;
+    margin-bottom: 30px;
+    padding: 10px 0;
+}
+
+.stats div h5 {
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 12px;
+    margin: 0;
+}
+
+.stats div span {
+    display: block;
+    font-size: 40px;
+    line-height: 40px;
+    text-align: center;
+}
