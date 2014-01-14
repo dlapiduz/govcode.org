@@ -87,6 +87,9 @@ class GhImport(Command):
                 db.session.add(c)
                 db.session.commit()
 
+        repo.last_commit_date = repo.last_commit.date
+        db.session.commit()
+
 
 
     def get_or_create_user(self, user):

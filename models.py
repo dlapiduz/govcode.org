@@ -23,7 +23,7 @@ class Organization(db.Model):
 class Repository(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     gh_id = db.Column(db.Integer)
-    name = db.Column(db.String(50))
+    name = db.Column(db.String(100))
     forks = db.Column(db.Integer)
     watchers = db.Column(db.Integer)
     size = db.Column(db.Integer)
@@ -34,6 +34,7 @@ class Repository(db.Model):
         backref=db.backref('repositories', lazy='dynamic'))
     users = db.relationship("User", secondary="commit", backref="repositories")
     slug = db.Column(db.String(100), unique=True)
+    last_commit_date = db.Column(db.DateTime)
 
     @hybrid_property
     def last_commit(self):
