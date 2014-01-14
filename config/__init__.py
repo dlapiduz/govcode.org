@@ -25,7 +25,7 @@ class TestConfig(BaseConfig):
     TESTING = True
     CSRF_ENABLED = False
 
-    SQLALCHEMY_DATABASE_URI = 'mysql://root@localhost/lmm_test'
+    SQLALCHEMY_DATABASE_URI = 'mysql://root@localhost/govcode_test'
     CACHE_CONFIG = { 'CACHE_TYPE': 'null' }
 
 
