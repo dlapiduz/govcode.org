@@ -20,7 +20,6 @@ class DevConfig(BaseConfig):
     CACHE_CONFIG = { 'CACHE_TYPE': 'null' }
 
 
-
 class TestConfig(BaseConfig):
     TESTING = True
     CSRF_ENABLED = False
