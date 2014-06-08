@@ -1,7 +1,6 @@
 package common
 
 import (
-	// "github.com/jinzhu/gorm"
 	"time"
 )
 
@@ -30,8 +29,10 @@ type Repository struct {
 	Language    string
 
 	OrganizationId int64
-	Commits        []Commit
-	Pulls          []Pull
+	Organization   Organization
+
+	Commits []Commit
+	Pulls   []Pull
 
 	Ignore bool
 

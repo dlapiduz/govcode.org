@@ -1,0 +1,128 @@
+@font-face {
+  font-family: 'Lato-Light';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Lato Light'), local('Lato-Light'), url(/font/Lato-Light.ttf) format('woff');
+}
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(/font/Lato-Regular.ttf) format('woff');
+}
+
+body {
+    background: #fafafa;
+    font-family: 'Lato-Light';
+}
+
+.clear {
+    height: 1px;
+    clear: both;
+}
+
+.container-fluid {
+    padding: 0;
+}
+
+h1 {
+    font-size: 42px;
+    float: left;
+    padding: 0;
+    margin: 0;
+    line-height: 45px;
+    margin-right: 10px;
+    padding-right: 10px;
+    border-right: 1px solid #ccc;
+    color: #fff;
+}
+
+h2 {
+    font-size: 20px;
+    color: #DDD;
+    padding: 0;
+    float: left;
+}
+
+header {
+    clear: both;
+    width: 100%;
+    padding: 40px 0 30px 10px;
+    background: #454545;
+    margin-bottom: 20px;
+
+}
+
+.card {
+    width: 260px;
+    float: left;
+    padding: 0;
+    margin: 10px;
+    /*border-right: 1px solid #ccc;*/
+    background: #fff;
+    box-shadow: 0px 0px 3px 0px #BBB;
+    height: 140px;
+    overflow: hidden;
+}
+
+.card h3 {
+    text-transform: uppercase;
+    font-size: 14px;
+    color: #fff;
+    background-color: rgb(0, 210, 180);
+    margin: 0;
+    padding: 12px;
+    font-family: 'Lato';
+}
+
+.card p {
+    padding: 17px 30px 15px 17px;
+    margin:0;
+    height: 72px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.card div.info {
+    padding: 0 17px 15px;
+}
+
+.card span {
+    color: #999;
+    margin-right: 10px;
+}
+
+.card span i {
+    color: #f80;
+}
+
+.filters {
+    width: 320px;
+    padding: 0;
+    margin: 10px;
+    /*border-right: 1px solid #ccc;*/
+    background: #fff;
+    box-shadow: 0px 0px 3px 0px #BBB;
+}
+
+.filters h4 {
+    text-transform: uppercase;
+    font-size: 14px;
+    color: #fff;
+    background-color: #454545;
+    margin: 0;
+    padding: 12px;
+    font-family: 'Lato';
+}
+
+.filters ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-left: 12px;
+    margin-top: 5px;
+}
+.filter li {
+    padding: 0;
+    margin: 0;
+}
