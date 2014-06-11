@@ -31,6 +31,7 @@ h1 {
     padding: 0;
     margin: 0;
     line-height: 45px;
+    margin-left: 20px;
     margin-right: 10px;
     padding-right: 10px;
     border-right: 1px solid #ccc;
@@ -54,7 +55,7 @@ header {
 }
 
 .card {
-    width: 260px;
+    width: 255px;
     float: left;
     padding: 0;
     margin: 10px;
@@ -63,6 +64,26 @@ header {
     box-shadow: 0px 0px 3px 0px #BBB;
     height: 140px;
     overflow: hidden;
+}
+
+.card.ruby h3 {
+    background-color: rgb(210, 0, 0);
+}
+
+.card.c h3 {
+    background-color: rgb(38,147,255);
+}
+
+.card.python h3 {
+    background-color: rgb(38,147,255);
+}
+
+.card.javascript h3 {
+    background-color: rgb(217,0,217);
+}
+
+.card.shell h3 {
+    background-color: rgb(255,122,77);
 }
 
 .card h3 {
@@ -97,12 +118,15 @@ header {
 }
 
 .filters {
-    width: 320px;
     padding: 0;
     margin: 10px;
     /*border-right: 1px solid #ccc;*/
-    background: #fff;
+}
+
+.filters .filter {
     box-shadow: 0px 0px 3px 0px #BBB;
+    background: #fff;
+    margin-bottom: 20px;
 }
 
 .filters h4 {
@@ -119,10 +143,43 @@ header {
     list-style: none;
     margin: 0;
     padding: 0;
-    margin-left: 12px;
     margin-top: 5px;
+    margin-bottom: 20px;
 }
 .filter li {
     padding: 0;
     margin: 0;
+}
+
+.filter .filter_cont {
+    padding: 10px;
+}
+
+nav {
+    float: right;
+    vertical-align: bottom;
+    margin-right: 40px;
+    margin-top: 25px;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    float: left;
+    margin: 0 5px;
+}
+
+nav ul li a, nav ul li a:visited {
+    color: #fff;
+    padding-bottom: 3px;
+}
+
+nav ul li a.current, nav ul li a:hover {
+    border-bottom: 1px solid #ccc;
+    text-decoration: none;
+    color: #fff;
 }

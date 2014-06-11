@@ -1,5 +1,5 @@
 <div class="col-md-9">
-    <div class="card" ng-repeat="repo in repos | includefilter:search | orderBy:'-Forks' ">
+    <div ng-repeat="repo in filtered = (repos | multifilter:search) | orderBy:'-Forks'" class="card {{ repo.Language | lowercase }}">
         <h3>{{ repo.Name }}</h3>
         <p>
             {{ repo.Description | characters:60: false }}
@@ -7,7 +7,7 @@
         <div class="info">
             <span> <i class="icon-git-fork"></i> {{ repo.Forks }}</span>
 
-            <span class="author"><i class="icon-user"></i> {{ repo.OrganizationId }}</span>
+            <span class="author"><i class="icon-user"></i> {{ repo.OrganizationLogin }}</span>
         </div>
     </div>
 
@@ -15,12 +15,24 @@
 
 <div class="col-md-3 side">
     <div class="filters">
-        <h4>Filter by Organization</h4>
-        <ul>
-            <li ng-repeat="org in orgs | orderBy:'Login'">
-                <input type="checkbox" ng-model="search.organizationId" name="filter_org[]"
-                 ng-true-value="{{ org.Id }}" CHECKED /> {{ org.Name }} <span ng-show="!org.Name"> {{ org.Login }}</span>
-            </li>
-        </ul>
+        <div class="filter">
+            <h4>Filter by Language</h4>
+            <div class="filter_cont">
+                <select ng-model="search.Language" ng-options="l for l in languages| orderBy:'l'">
+                    <option value="">All</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="filter">
+            <h4>Filter by Organization</h4>
+            <div class="filter_cont">
+                <ul>
+                    <li ng-repeat="org in orgs | orderBy:'Login'">
+                        <input type="checkbox" ng-model="search.orgFilter[org.Id]" name="filter_org" CHECKED /> {{ org.Name }} <span ng-show="!org.Name"> {{ org.Login }}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
