@@ -46,7 +46,7 @@ angular
       var i;
       for (i = 0; i < items.length; i++) {
         // Filter by language
-        if (options.Language !== null && items[i].Language !== options.Language) {
+        if (options.Language !== '' && items[i].Language !== options.Language) {
           continue;
         }
         // Filter by org

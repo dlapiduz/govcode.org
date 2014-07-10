@@ -1,13 +1,14 @@
 <div class="col-md-9">
-    <div ng-repeat="repo in filtered = (repos | multifilter:search) | orderBy:'-Forks'" class="card {{ repo.Language | lowercase }}">
+    <div ng-repeat="repo in filtered = (repos | multifilter:search) | orderBy:'-Forks'" class="card {{ mapLang(repo.Language) }}">
         <h3>{{ repo.Name }}</h3>
         <p>
             {{ repo.Description | characters:60: false }}
+            <span ng-show="!repo.Description">No Description</span>
         </p>
         <div class="info">
             <span> <i class="icon-git-fork"></i> {{ repo.Forks }}</span>
 
-            <span class="author"><i class="icon-user"></i> {{ repo.OrganizationLogin }}</span>
+            <span class="author"><i class="fa fa-user"></i> {{ repo.OrganizationLogin }}</span>
         </div>
     </div>
 
@@ -18,8 +19,9 @@
         <div class="filter">
             <h4>Filter by Language</h4>
             <div class="filter_cont">
-                <select ng-model="search.Language" ng-options="l for l in languages| orderBy:'l'">
+                <select ng-model="search.Language">
                     <option value="">All</option>
+                    <option ng-repeat="l in languages | orderBy:'slug'" value="{{ l.name }}">{{ l.name }}</option>
                 </select>
             </div>
         </div>
@@ -27,8 +29,13 @@
         <div class="filter">
             <h4>Filter by Organization</h4>
             <div class="filter_cont">
+                <div class="sub_filters">
+                    <input type="text" placeholder="Find Orgs" ng-model="filterOrgs" />
+                    <a href="" ng-click="allOrgs(true)">All</a>
+                    <a href="" ng-click="allOrgs(false)">None</a>
+                </div>
                 <ul>
-                    <li ng-repeat="org in orgs | orderBy:'Login'">
+                    <li ng-repeat="org in orgs | orderBy:'Login' | filter:filterOrgs ">
                         <input type="checkbox" ng-model="search.orgFilter[org.Id]" name="filter_org" CHECKED /> {{ org.Name }} <span ng-show="!org.Name"> {{ org.Login }}</span>
                     </li>
                 </ul>

@@ -21,6 +21,7 @@ func main() {
 				c.DB.AutoMigrate(c.User{})
 				c.DB.AutoMigrate(c.Pull{})
 				c.DB.AutoMigrate(c.CommitOrgStats{})
+				c.DB.AutoMigrate(c.RepoStat{})
 			},
 		},
 		{

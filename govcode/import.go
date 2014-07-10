@@ -1,15 +1,16 @@
 package main
 
 import (
-	"encoding/json"
-	"net/http"
-	// "os"
 	"code.google.com/p/goauth2/oauth"
+	"encoding/json"
 	"fmt"
 	"github.com/google/go-github/github"
 	c "govcode.org/common"
 	"io/ioutil"
+	"net/http"
+	"os"
 	"sync"
+	"time"
 )
 
 func getStr(str *string) string {
@@ -19,26 +20,27 @@ func getStr(str *string) string {
 	return *str
 }
 
-func findOrCreateUser(gh_user *github.User) int64 {
-	var user c.User
+func findOrCreateUser(user *c.User) int64 {
 
-	c.DB.Where("gh_id = ?", *gh_user.ID).First(&user)
+	var new_user c.User
+	c.DB.Where("gh_id = ?", user.GhId).First(&new_user)
 
-	if user.Id == 0 {
-		user.Login = *gh_user.Login
-		user.AvatarUrl = getStr(gh_user.AvatarURL)
-		user.GhId = int64(*gh_user.ID)
-		c.DB.Save(&user)
+	if new_user.Id == 0 {
+		new_user.Login = user.Login
+		new_user.AvatarUrl = user.AvatarUrl
+		new_user.GhId = user.GhId
+		new_user.CommitCount = 0
+		c.DB.Save(&new_user)
 	}
 
-	return user.Id
+	return new_user.Id
 }
 
 func runImport() (err error) {
-	// gh_key := os.Getenv("GH_KEY")
+	gh_key := os.Getenv("GH_KEY")
 
 	t := &oauth.Transport{
-		Token: &oauth.Token{AccessToken: "e20e82ed78f8d31be5f0ce5d875ccf62d72b8df8"},
+		Token: &oauth.Token{AccessToken: gh_key},
 	}
 
 	client := github.NewClient(t.Client())
@@ -82,7 +84,9 @@ func importOrgs(orgs []string, client *github.Client) {
 		wg.Add(1)
 
 		go func(org_name string, wg *sync.WaitGroup) {
-			gh_org, _, err := client.Organizations.Get(org_name)
+			gh_org, res, err := client.Organizations.Get(org_name)
+			fmt.Println("Getting Org", org_name)
+			fmt.Println(res)
 			// Do not panic, probably 404 error
 			if err != nil {
 				fmt.Println(err)
@@ -95,7 +99,6 @@ func importOrgs(orgs []string, client *github.Client) {
 			c.DB.Where("login = ?", gh_org.Login).First(&org)
 
 			if org.Id == 0 {
-				fmt.Println("New org")
 				org.Login = *gh_org.Login
 				if gh_org.Name != nil {
 					org.Name = *gh_org.Name
@@ -103,7 +106,6 @@ func importOrgs(orgs []string, client *github.Client) {
 				org.Ignore = false
 
 				c.DB.Save(&org)
-				fmt.Println("Adding: ", org.Name)
 			}
 			// Import repos
 			importRepos(&org, client, 1)
@@ -120,6 +122,8 @@ func importRepos(org *c.Organization, client *github.Client, page int) {
 	opt.ListOptions = github.ListOptions{Page: page, PerPage: 100}
 
 	repos, response, err := client.Repositories.ListByOrg(org.Login, opt)
+	fmt.Println("Getting Repos", org.Login, page)
+	fmt.Println(response)
 	if err != nil {
 		fmt.Println("Error with org: ", org.Login)
 		return
@@ -127,9 +131,12 @@ func importRepos(org *c.Organization, client *github.Client, page int) {
 
 	// There are more pages, lets fetch the next one
 	if response.NextPage > 0 {
-		fmt.Println("Getting more", org.Login, page)
-		go importRepos(org, client, response.NextPage)
+		importRepos(org, client, response.NextPage)
 	}
+
+	concurrency := 2
+
+	sem := make(chan bool, concurrency)
 
 	for _, r := range repos {
 		if !*r.Fork {
@@ -153,52 +160,63 @@ func importRepos(org *c.Organization, client *github.Client, page int) {
 
 			c.DB.Save(&repo)
 
-			// importCommits(&repo, org, client, 1)
+			sem <- true
+			go importStats(&repo, org, client, &sem)
+
 			importPulls(&repo, org, client, 1)
 		}
+	}
 
+	for i := 0; i < cap(sem); i++ {
+		sem <- true
 	}
 }
 
-func importCommits(repo *c.Repository, org *c.Organization, client *github.Client, page int) {
-	// Import commits for a given repo
-	opt := &github.CommitsListOptions{}
-	opt.ListOptions = github.ListOptions{Page: page, PerPage: 100}
-
-	var last_commit c.Commit
-	c.DB.Where("repository_id = ?", repo.Id).Order("date desc").First(&last_commit)
-
-	if last_commit.Id > 0 {
-		opt.Since = last_commit.Date
-	}
-
-	commits, response, err := client.Repositories.ListCommits(org.Login, repo.Name, opt)
+func importStats(repo *c.Repository, org *c.Organization, client *github.Client, sem *chan bool) {
+	stats, res, err := client.Repositories.ListContributorsStats(org.Login, repo.Name)
+	fmt.Println("Getting stats", repo.Name)
+	fmt.Println(res)
 	if err != nil {
-		fmt.Println("Error with repo: ", repo.Name)
-		return
-	}
-
-	// There are more pages, lets fetch the next one
-	if response.NextPage > 0 {
-		fmt.Println("Getting more", org.Login, repo.Name, page)
-		importCommits(repo, org, client, response.NextPage)
-	}
-
-	for _, gh_commit := range commits {
-		var commit c.Commit
-
-		// Does the commit exist?
-		c.DB.Where("sha = ? and repository_id = ?", *gh_commit.SHA, repo.Id).First(&commit)
-
-		if commit.Id == 0 {
-			commit.Sha = *gh_commit.SHA
-			commit.Message = getStr(gh_commit.Commit.Message)
-			commit.Date = *gh_commit.Commit.Author.Date
-			commit.RepositoryId = repo.Id
-			commit.UserId = findOrCreateUser(gh_commit.Author)
-			c.DB.Save(&commit)
+		if res != nil && res.StatusCode == 202 {
+			<-*sem
+			time.Sleep(2000)
+			*sem <- true
+			go importStats(repo, org, client, sem)
+			return
 		}
 	}
+
+	for _, s := range stats {
+		for _, w := range s.Weeks {
+			if *w.Commits == 0 {
+				continue
+			}
+
+			var stat c.RepoStat
+			var user c.User
+			user.FromGhContrib(s.Author)
+
+			user_id := findOrCreateUser(&user)
+			// Does it exist?
+			timeStr := fmt.Sprintf("%4d%02d%02d", w.Week.Time.Year(), w.Week.Time.Month(), w.Week.Time.Day())
+			c.DB.Where("user_id = ? and repository_id = ? and to_char(week, 'YYYYMMDD') = ?",
+				user_id,
+				repo.Id,
+				timeStr).First(&stat)
+
+			if stat.Id == 0 || stat.Commits != int64(*w.Commits) {
+				stat.UserId = user_id
+				stat.RepositoryId = repo.Id
+				stat.Week = w.Week.Time
+				stat.Add = int64(*w.Additions)
+				stat.Del = int64(*w.Deletions)
+				stat.Commits = int64(*w.Commits)
+				c.DB.Save(&stat)
+			}
+		}
+	}
+
+	<-*sem
 }
 
 func importPulls(repo *c.Repository, org *c.Organization, client *github.Client, page int) {
@@ -208,6 +226,8 @@ func importPulls(repo *c.Repository, org *c.Organization, client *github.Client,
 	opt.ListOptions = github.ListOptions{Page: page, PerPage: 100}
 
 	pulls, response, err := client.PullRequests.List(org.Login, repo.Name, opt)
+	fmt.Println("Getting pulls", repo.Name, page)
+	fmt.Println(response)
 	if err != nil {
 		fmt.Println("Error with repo pulls: ", repo.Name)
 		fmt.Println(err)
@@ -216,7 +236,6 @@ func importPulls(repo *c.Repository, org *c.Organization, client *github.Client,
 
 	// There are more pages, lets fetch the next one
 	if response.NextPage > 0 {
-		fmt.Println("Getting more pulls", org.Login, repo.Name, page)
 		importPulls(repo, org, client, response.NextPage)
 	}
 
@@ -232,13 +251,23 @@ func importPulls(repo *c.Repository, org *c.Organization, client *github.Client,
 			pull.Body = getStr(gh_pull.Body)
 			pull.Admin = *gh_pull.User.SiteAdmin
 			pull.Number = int64(*gh_pull.Number)
-			pull.GhCreatedAt = *gh_pull.CreatedAt
-			pull.UserId = findOrCreateUser(gh_pull.User)
+			pull.GhCreatedAt.Time = *gh_pull.CreatedAt
+
+			var user c.User
+			user.FromGhUser(gh_pull.User)
+
+			pull.UserId = findOrCreateUser(&user)
 		}
-		pull.GhUpdatedAt = *gh_pull.UpdatedAt
+
+		// If the pull has not been updated go to the next one
+		if pull.GhUpdatedAt.Time == *gh_pull.UpdatedAt {
+			continue
+		}
+
+		pull.GhUpdatedAt.Time = *gh_pull.UpdatedAt
 
 		if gh_pull.MergedAt != nil {
-			pull.MergedAt = *gh_pull.MergedAt
+			pull.MergedAt.Time = *gh_pull.MergedAt
 		}
 
 		c.DB.Save(&pull)

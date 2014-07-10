@@ -1,6 +1,8 @@
 package common
 
 import (
+	"github.com/google/go-github/github"
+	"github.com/lib/pq"
 	"time"
 )
 
@@ -13,7 +15,7 @@ type Organization struct {
 	Repositories []Repository
 
 	CreatedAt time.Time
-	UpdatedAt time.Time
+	// UpdatedAt time.Time
 }
 
 type Repository struct {
@@ -28,16 +30,26 @@ type Repository struct {
 	Description string
 	Language    string
 
-	OrganizationId int64
-	Organization   Organization
+	// Stats
+	LastCommit  pq.NullTime
+	LastPull    pq.NullTime
+	CommitCount int64
 
-	Commits []Commit
-	Pulls   []Pull
+	OrganizationId int64
+
+	// Related fields
+	OrganizationLogin string `sql:-`
+	Commits           []Commit
+	Pulls             []Pull
 
 	Ignore bool
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
+}
+
+func (r Repository) TableName() string {
+	return "repositories"
 }
 
 type Commit struct {
@@ -50,10 +62,12 @@ type Commit struct {
 }
 
 type User struct {
-	Id        int64
-	GhId      int64
-	Login     string `sql:"size(255)"`
-	AvatarUrl string `sql:"size(255)"`
+	Id          int64
+	GhId        int64
+	Login       string `sql:"size(255)"`
+	AvatarUrl   string `sql:"size(255)"`
+	CommitCount int64
+	OrgList     string `sql:"size(255)"`
 
 	Commits []Commit
 }
@@ -68,20 +82,51 @@ type Pull struct {
 	State        string
 	UserId       int64
 
-	MergedAt    time.Time
-	GhCreatedAt time.Time
-	GhUpdatedAt time.Time
+	MergedAt    pq.NullTime
+	GhCreatedAt pq.NullTime
+	GhUpdatedAt pq.NullTime
 
 	CreatedAt time.Time
 }
 
+type RepoStat struct {
+	Id           int64
+	RepositoryId int64
+	UserId       int64
+
+	Week    time.Time
+	Add     int64
+	Del     int64
+	Commits int64
+}
+
+type RepoAggStat struct {
+	Id           int64
+	RepositoryId int64
+
+	Week    time.Time
+	Add     int64
+	Del     int64
+	Commits int64
+}
+
 type CommitOrgStats struct {
 	Id              int64
-	RepositoryId    int64
+	Week            time.Time
 	OrganizationId  int64
-	Month           int64
-	Year            int64
 	CommitCount     int64
 	NewPullCount    int64
 	ClosedPullCount int64
+}
+
+func (u *User) FromGhUser(gh_user *github.User) {
+	u.Login = *gh_user.Login
+	u.GhId = int64(*gh_user.ID)
+	u.AvatarUrl = *gh_user.AvatarURL
+}
+
+func (u *User) FromGhContrib(gh_contrib *github.Contributor) {
+	u.Login = *gh_contrib.Login
+	u.GhId = int64(*gh_contrib.ID)
+	u.AvatarUrl = *gh_contrib.AvatarURL
 }

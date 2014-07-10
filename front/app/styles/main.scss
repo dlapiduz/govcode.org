@@ -76,7 +76,7 @@ header {
 }
 
 .card.c h3 {
-    background-color: rgb(38,147,255);
+    background-color: rgb(199,205,43);
 }
 
 .card.python h3 {
@@ -84,11 +84,15 @@ header {
 }
 
 .card.javascript h3 {
-    background-color: rgb(217,0,217);
+    background-color: rgb(195, 22, 195);
 }
 
 .card.shell h3 {
     background-color: rgb(255,122,77);
+}
+
+.card.coffeescript h3 {
+    background-color: rgb(140,70,0);
 }
 
 .card h3 {
@@ -99,6 +103,7 @@ header {
     margin: 0;
     padding: 12px;
     font-family: 'Lato';
+    height: 40px;
 }
 
 .card p {
@@ -123,18 +128,24 @@ header {
 }
 
 .filters {
-    padding: 0;
-    margin: 10px;
-    /*border-right: 1px solid #ccc;*/
-}
+  padding: 0;
+  margin: 10px;
+  /*border-right: 1px solid #ccc;*/
 
-.filters .filter {
+  .filter {
     box-shadow: 0px 0px 3px 0px #BBB;
     background: #fff;
     margin-bottom: 20px;
-}
+    li {
+      padding: 0;
+      margin: 0;
+    }
+    .filter_cont {
+      padding: 10px;
+    }
+  }
 
-.filters h4 {
+  h4 {
     text-transform: uppercase;
     font-size: 14px;
     color: #fff;
@@ -142,22 +153,15 @@ header {
     margin: 0;
     padding: 12px;
     font-family: 'Lato';
-}
+  }
 
-.filters ul {
+  ul {
     list-style: none;
     margin: 0;
     padding: 0;
     margin-top: 5px;
     margin-bottom: 20px;
-}
-.filter li {
-    padding: 0;
-    margin: 0;
-}
-
-.filter .filter_cont {
-    padding: 10px;
+  }
 }
 
 nav {
@@ -187,4 +191,8 @@ nav ul li a.current, nav ul li a:hover {
     border-bottom: 1px solid #ccc;
     text-decoration: none;
     color: #fff;
+}
+
+.find-box {
+    margin: 20px 0;
 }

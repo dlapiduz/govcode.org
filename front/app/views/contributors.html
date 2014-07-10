@@ -1,1 +1,41 @@
-contributors
+<div class="col-md-8">
+    <h3>
+        Top Contributors
+    </h3>
+
+    <div class="find-box">
+      <form class="form-inline" role="form">
+        <div class="form-group">
+          <label for="contribSearch">Find</label>
+          <input type="text" class="form-control" id="contribSearch" ng-model="contribSearch" placeholder="Enter term(s)">
+        </div>
+      </form>
+    </div>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th width="32"></th>
+          <th width="200">Login</th>
+          <th width="50">Commits</th>
+          <th width="200">Organizations</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="user in users | filter:contribSearch | orderBy:'-CommitCount'">
+          <td>
+            <a href="https://github.com/{{ user.Login }}" title="{{ user.Login }} Github" target="_BLANK">
+              <img src="{{ user.AvatarUrl }}" alt="{{ user.Login }} Avatar" width="32" />
+            </a>
+          </td>
+          <td>
+            <a href="https://github.com/{{ user.Login }}" title="{{ user.Login }} Github" target="_BLANK">
+              {{ user.Login }}
+            </a>
+          </td>
+          <td>{{ user.CommitCount }}</td>
+          <td>{{ user.OrgList }}</td>
+        </tr>
+      </tbody>
+    </table>
+</div>

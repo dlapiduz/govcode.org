@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/go-martini/martini"
+	"github.com/martini-contrib/cors"
 	"github.com/martini-contrib/render"
 	c "govcode.org/common"
 	"log"
@@ -15,6 +16,10 @@ func main() {
 		Directory: "templates",
 	}))
 
+	m.Use(cors.Allow(&cors.Options{
+		AllowOrigins: []string{"*"},
+	}))
+
 	m.Group("/repos", func(r martini.Router) {
 		r.Get("", ReposIndex)
 		r.Get("/:id", ReposShow)
@@ -23,6 +28,11 @@ func main() {
 	m.Group("/orgs", func(r martini.Router) {
 		r.Get("", OrgsIndex)
 		r.Get("/:id", OrgsShow)
+	})
+
+	m.Group("/users", func(r martini.Router) {
+		r.Get("", UserIndex)
+		r.Get("/:id", UserShow)
 	})
 
 	m.Run()
@@ -36,12 +46,9 @@ func ReposIndex(r render.Render) {
 
 	var results []c.Repository
 	rows := c.DB.Table("repositories")
-	rows = rows.Select("repositories.*, organizations.name as organization_name")
+	rows = rows.Select("organizations.login as organization_login, repositories.*")
 	rows = rows.Joins("inner join organizations on organizations.id = repositories.organization_id")
-	rows = rows.Limit(10)
-	rows.Debug().Scan(&results)
-
-	r.Header().Add("Access-Control-Allow-Origin", "*")
+	rows.Scan(&results)
 
 	r.JSON(200, results)
 }
@@ -49,7 +56,6 @@ func ReposIndex(r render.Render) {
 func ReposShow(r render.Render, params martini.Params) {
 	var result c.Repository
 	c.DB.Where("id = ?", params["id"]).First(&result)
-	r.Header().Add("Access-Control-Allow-Origin", "*")
 
 	r.JSON(200, result)
 }
@@ -57,7 +63,6 @@ func ReposShow(r render.Render, params martini.Params) {
 func OrgsIndex(r render.Render) {
 	var results []c.Organization
 	c.DB.Find(&results)
-	r.Header().Add("Access-Control-Allow-Origin", "*")
 
 	r.JSON(200, results)
 }
@@ -65,7 +70,20 @@ func OrgsIndex(r render.Render) {
 func OrgsShow(r render.Render, params martini.Params) {
 	var result c.Organization
 	c.DB.Where("id = ?", params["id"]).First(&result)
-	r.Header().Add("Access-Control-Allow-Origin", "*")
+
+	r.JSON(200, result)
+}
+
+func UserIndex(r render.Render) {
+	var results []c.User
+	c.DB.Find(&results)
+
+	r.JSON(200, results)
+}
+
+func UserShow(r render.Render, params martini.Params) {
+	var result c.User
+	c.DB.Where("id = ?", params["id"]).First(&result)
 
 	r.JSON(200, result)
 }
