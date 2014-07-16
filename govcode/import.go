@@ -134,7 +134,7 @@ func importRepos(org *c.Organization, client *github.Client, page int) {
 		importRepos(org, client, response.NextPage)
 	}
 
-	concurrency := 2
+	concurrency := 4
 
 	sem := make(chan bool, concurrency)
 
@@ -178,10 +178,9 @@ func importStats(repo *c.Repository, org *c.Organization, client *github.Client,
 	fmt.Println(res)
 	if err != nil {
 		if res != nil && res.StatusCode == 202 {
-			<-*sem
-			time.Sleep(2000)
-			*sem <- true
-			go importStats(repo, org, client, sem)
+			fmt.Println("Sleeping")
+			time.Sleep(4 * time.Second)
+			importStats(repo, org, client, sem)
 			return
 		}
 	}
@@ -252,6 +251,7 @@ func importPulls(repo *c.Repository, org *c.Organization, client *github.Client,
 			pull.Admin = *gh_pull.User.SiteAdmin
 			pull.Number = int64(*gh_pull.Number)
 			pull.GhCreatedAt.Time = *gh_pull.CreatedAt
+			pull.GhCreatedAt.Valid = true
 
 			var user c.User
 			user.FromGhUser(gh_pull.User)
@@ -265,9 +265,11 @@ func importPulls(repo *c.Repository, org *c.Organization, client *github.Client,
 		}
 
 		pull.GhUpdatedAt.Time = *gh_pull.UpdatedAt
+		pull.GhUpdatedAt.Valid = true
 
 		if gh_pull.MergedAt != nil {
 			pull.MergedAt.Time = *gh_pull.MergedAt
+			pull.MergedAt.Valid = true
 		}
 
 		c.DB.Save(&pull)
