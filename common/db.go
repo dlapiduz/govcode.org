@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq"
+	"os"
 )
 
 var DB gorm.DB
 
 func init() {
 	var err error
-	DB, err = gorm.Open("postgres", "user=govcode password=govcode dbname=govcode_go sslmode=disable")
+	DB, err = gorm.Open("postgres", os.Getenv("PG_CONN_STR"))
 
 	// Connection string parameters for Postgres - http://godoc.org/github.com/lib/pq, if you are using another
 	// database refer to the relevant driver's documentation.
