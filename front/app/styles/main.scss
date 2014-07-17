@@ -7,13 +7,13 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/font
   font-family: 'Lato-Light';
   font-style: normal;
   font-weight: 300;
-  src: local('Lato Light'), local('Lato-Light'), url(../bower_components/google-lato/font/Lato-Light.ttf) format('woff');
+  src: local('Lato Light'), local('Lato-Light'), url(../vendor/google-lato/font/Lato-Light.ttf) format('woff');
 }
 @font-face {
   font-family: 'Lato';
   font-style: normal;
   font-weight: 400;
-  src: local('Lato Regular'), local('Lato-Regular'), url(../bower_components/google-lato/font/Lato-Regular.ttf) format('woff');
+  src: local('Lato Regular'), local('Lato-Regular'), url(../vendor/google-lato/font/Lato-Regular.ttf) format('woff');
 }
 
 body {
