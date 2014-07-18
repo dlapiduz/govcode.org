@@ -46,7 +46,10 @@ func ReposIndex(r render.Render) {
 
 	var results []c.Repository
 	rows := c.DB.Table("repositories")
-	rows = rows.Select("organizations.login as organization_login, repositories.*")
+	rows = rows.Select(`repositories.*, organizations.login as organization_login,
+		date_part('day', now() - last_pull) as days_since_pull,
+		date_part('day', now() - last_commit) as days_since_commit
+		`)
 	rows = rows.Joins("inner join organizations on organizations.id = repositories.organization_id")
 	rows.Scan(&results)
 

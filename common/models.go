@@ -37,10 +37,14 @@ type Repository struct {
 
 	OrganizationId int64
 
-	// Related fields
+	// Accessor Fields
 	OrganizationLogin string `sql:-`
-	Commits           []Commit
-	Pulls             []Pull
+	DaysSincePull     int64  `sql:-`
+	DaysSinceCommit   int64  `sql:-`
+
+	// Related fields
+	Commits []Commit
+	Pulls   []Pull
 
 	Ignore bool
 
