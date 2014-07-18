@@ -15,7 +15,8 @@ angular
     'ngRoute',
     'ngSanitize',
     'truncate', 
-    'ui.unique'
+    'ui.unique',
+    'angular-table'
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -53,6 +54,16 @@ angular
         if (!options.orgFilter[items[i].OrganizationId]) {
           continue;
         }
+
+        // Filter by lastActivity
+        if (options.lastActivity < 12 && 
+            options.lastActivity > 0 && 
+            ( items[i].DaysSinceCommit > options.lastActivity * 30 || 
+              items[i].DaysSinceCommit == 0)
+            ) {
+          continue;
+        }
+
 
         filteredItems.push(items[i]);
       }

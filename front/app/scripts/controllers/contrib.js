@@ -9,9 +9,24 @@
  */
 
 angular.module('govcodeApp')
-  .controller('ContribCtrl', ['$scope', '$http', function ($scope, $http) {
+  .controller('ContribCtrl', ['$scope', '$http', '$filter', function ($scope, $http, $filter) {
+
+    $scope.config = {
+      itemsPerPage: 100,
+      fillLastPage: false
+    }
+
+    $scope.filteredUsers = [];
+
+
+
     $http.get('http://localhost:3000/users').success(function (data) {
       $scope.users = data;
+      $scope.updateFilteredList();
     });
+
+    $scope.updateFilteredList = function() {
+      $scope.filteredUsers = $filter("filter")($scope.users, $scope.query);
+    };
 
   }]);

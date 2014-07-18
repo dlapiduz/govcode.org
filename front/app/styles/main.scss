@@ -3,22 +3,10 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/font
 @import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
 // endbower
 
-@font-face {
-  font-family: 'Lato-Light';
-  font-style: normal;
-  font-weight: 300;
-  src: local('Lato Light'), local('Lato-Light'), url(../vendor/google-lato/font/Lato-Light.ttf) format('woff');
-}
-@font-face {
-  font-family: 'Lato';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Lato Regular'), local('Lato-Regular'), url(../vendor/google-lato/font/Lato-Regular.ttf) format('woff');
-}
-
 body {
     background: #fafafa;
-    font-family: 'Lato-Light';
+    font-family: 'Lato';
+    font-weight: 300;
 }
 
 .clear {
@@ -41,6 +29,7 @@ h1 {
     padding-right: 10px;
     border-right: 1px solid #ccc;
     color: #fff;
+    font-weight: 300;
 }
 
 h2 {
@@ -48,6 +37,7 @@ h2 {
     color: #DDD;
     padding: 0;
     float: left;
+    font-weight: 300;
 }
 
 header {
@@ -60,7 +50,7 @@ header {
 }
 
 .card {
-    width: 255px;
+    width: 280px;
     float: left;
     padding: 0;
     margin: 10px;
@@ -71,39 +61,57 @@ header {
     overflow: hidden;
 }
 
-.card.ruby h3 {
+.card .card-head {
+    background-color: #454545;
+    margin: 0;
+    height: 40px;
+}
+
+.card .card-head span {
+    float: left;
+    display: block;
+    width: 20px;
+    height: 40px;
+}
+
+.card .card-head span {
+    font-size: 24px;
+    line-height: 16px;
+    background-color: rgb(0, 210, 180);
+}
+
+.card .card-head span.ruby {
     background-color: rgb(210, 0, 0);
 }
 
-.card.c h3 {
+.card .card-head span.c {
     background-color: rgb(199,205,43);
 }
 
-.card.python h3 {
+.card .card-head span.python {
     background-color: rgb(38,147,255);
 }
 
-.card.javascript h3 {
+.card .card-head span.javascript {
     background-color: rgb(195, 22, 195);
 }
 
-.card.shell h3 {
+.card .card-head span.shell {
     background-color: rgb(255,122,77);
 }
 
-.card.coffeescript h3 {
+.card .card-head span.coffeescript {
     background-color: rgb(140,70,0);
 }
 
 .card h3 {
     text-transform: uppercase;
-    font-size: 14px;
+    font-size: 13px;
+    line-height: 16px;
     color: #fff;
-    background-color: rgb(0, 210, 180);
-    margin: 0;
     padding: 12px;
+    margin: 0;
     font-family: 'Lato';
-    height: 40px;
 }
 
 .card p {
@@ -131,6 +139,17 @@ header {
   padding: 0;
   margin: 10px;
   /*border-right: 1px solid #ccc;*/
+
+  h3 {
+    font-weight: 300;
+    font-size: 18px;
+    margin: 0;
+    margin-bottom: 20px;
+  }
+
+  select {
+    width: 100%;
+  }
 
   .filter {
     box-shadow: 0px 0px 3px 0px #BBB;

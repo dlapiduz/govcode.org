@@ -1,13 +1,16 @@
 <div class="col-md-9">
-    <div ng-repeat="repo in filtered = (repos | multifilter:search) | orderBy:'-Forks'" class="card {{ mapLang(repo.Language) }}">
-        <h3>{{ repo.Name }}</h3>
+    <div ng-repeat="repo in filtered = (repos | multifilter:search) | orderBy:sort" class="card">
+        <div class="card-head">
+            <span class="{{ mapLang(repo.Language) }}">&nbsp;</span>
+            <h3>{{ repo.Name }}</h3>
+        </div>
         <p>
             {{ repo.Description | characters:60: false }}
             <span ng-show="!repo.Description">No Description</span>
         </p>
         <div class="info">
             <span> <i class="icon-git-fork"></i> {{ repo.Forks }}</span>
-
+            <span> <i class="fa fa-star"></i> {{ repo.Stargazers }}</span>
             <span class="author"><i class="fa fa-user"></i> {{ repo.OrganizationLogin }}</span>
         </div>
     </div>
@@ -16,6 +19,38 @@
 
 <div class="col-md-3 side">
     <div class="filters">
+
+        <h3>Showing {{ filtered.length }} repositories</h3>
+
+        <div class="filter">
+            <h4>Order by</h4>
+            <div class="filter_cont">
+                <div class="sort">
+                    <input type="radio" value="-Forks" name="sort" id="sort_forks" ng-model="sort">
+                    <label for="sort_forks">Forks</label>
+                </div>
+                <div class="sort">
+                    <input type="radio" value="-Watchers" name="sort" id="sort_watchers" ng-model="sort">
+                    <label for="sort_watchers">Watchers</label>
+                </div>
+                <div class="sort">
+                    <input type="radio" value="-Stargazers" name="sort" id="sort_stars" ng-model="sort">
+                    <label for="sort_stars">Stars</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="filter">
+            <h4>Filter by last activity</h4>
+            <div class="filter_cont">
+                <input ng-model="search.lastActivity" type="range" min="1" max="12" value="6" /> <br />
+                <span>
+                    Active in the last {{ search.lastActivity }} months<span ng-show="search.lastActivity >= 12"> or more</span>.
+                </span>
+
+            </div>
+        </div>
+
         <div class="filter">
             <h4>Filter by Language</h4>
             <div class="filter_cont">

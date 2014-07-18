@@ -7,35 +7,31 @@
       <form class="form-inline" role="form">
         <div class="form-group">
           <label for="contribSearch">Find</label>
-          <input type="text" class="form-control" id="contribSearch" ng-model="contribSearch" placeholder="Enter term(s)">
+          <input type="text" class="form-control" id="contribSearch" ng-model="query" ng-change="updateFilteredList()" placeholder="Enter term(s)">
         </div>
       </form>
     </div>
 
-    <table class="table">
-      <thead>
-        <tr>
-          <th width="32"></th>
-          <th width="200">Login</th>
-          <th width="50">Commits</th>
-          <th width="200">Organizations</th>
-        </tr>
-      </thead>
+    <table at-table at-config="config" at-list="filteredUsers" at-paginated class="table">
+      <thead></thead>
       <tbody>
-        <tr ng-repeat="user in users | filter:contribSearch | orderBy:'-CommitCount'">
-          <td>
-            <a href="https://github.com/{{ user.Login }}" title="{{ user.Login }} Github" target="_BLANK">
-              <img src="{{ user.AvatarUrl }}" alt="{{ user.Login }} Avatar" width="32" />
+        <tr>
+          <td at-attribute="AvatarUrl" width="32" at-title=" ">
+            <a href="https://github.com/{{ item.Login }}" title="{{ item.Login }} Github" target="_BLANK">
+              <img src="{{ item.AvatarUrl }}" alt="{{ item.Login }} Avatar" width="32" />
             </a>
           </td>
-          <td>
-            <a href="https://github.com/{{ user.Login }}" title="{{ user.Login }} Github" target="_BLANK">
-              {{ user.Login }}
+          <td at-attribute="Login" width="200" at-title="Username">
+            <a href="https://github.com/{{ item.Login }}" title="{{ item.Login }} Github" target="_BLANK">
+              {{ item.Login }}
             </a>
           </td>
-          <td>{{ user.CommitCount }}</td>
-          <td>{{ user.OrgList }}</td>
+          <td at-attribute="CommitCount" at-sortable at-implicit at-initial-sorting="desc" width="50" at-title="Commits"></td>
+          <td at-attribute="OrgList" at-implicit width="200" at-title="Organizations"></td>
         </tr>
       </tbody>
     </table>
+
+    <at-pagination at-config="config" at-list="filteredUsers"></at-pagination>
+
 </div>

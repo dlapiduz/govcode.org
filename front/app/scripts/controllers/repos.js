@@ -38,6 +38,10 @@ angular.module('govcodeApp')
 
     $scope.mapLang = mapLang;
 
+    $scope.search.lastActivity = 6;
+
+    $scope.sort = '-Forks';
+
     $scope.allOrgs = function(show) {
       $.each($scope.search.orgFilter, function(key, val) { 
         $scope.search.orgFilter[key] = show;
