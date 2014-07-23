@@ -43,8 +43,10 @@ type Repository struct {
 	DaysSinceCommit   int64  `sql:-`
 
 	// Related fields
-	Commits []Commit
-	Pulls   []Pull
+	Commits      []Commit
+	Pulls        []Pull
+	Organization Organization
+	RepoStat     []RepoStat
 
 	Ignore bool
 
