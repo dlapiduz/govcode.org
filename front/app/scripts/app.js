@@ -52,7 +52,7 @@ angular
       });
   }])
   .run(['$rootScope', function($rootScope) {
-    $rootScope.apiUrl = "http://localhost:3000";
+    $rootScope.apiUrl = "http://api.govcode.org";
   }])
   .filter('multifilter', function() {
     return function(items, options) {

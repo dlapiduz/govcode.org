@@ -9,7 +9,11 @@
  */
 
 angular.module('govcodeApp')
-  .controller('ContribCtrl', ['$scope', '$http', '$filter', function ($scope, $http, $filter) {
+  .controller('ContribCtrl', ['$rootScope',
+                              '$scope',
+                              '$http',
+                              '$filter',
+                              function ($rootScope, $scope, $http, $filter) {
 
     $scope.config = {
       itemsPerPage: 100,
@@ -20,7 +24,7 @@ angular.module('govcodeApp')
 
 
 
-    $http.get('http://localhost:3000/users').success(function (data) {
+    $http.get($rootScope.apiUrl + '/users').success(function (data) {
       $scope.users = data;
 
       $.map($scope.users, function(el) {

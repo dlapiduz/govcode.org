@@ -36,7 +36,10 @@ var mangleLangs = function(data) {
 
 
 angular.module('govcodeApp')
-  .controller('ReposCtrl', ['$scope', '$http', function ($scope, $http) {
+  .controller('ReposCtrl', ['$rootScope',
+                            '$scope',
+                            '$http', 
+                            function ($rootScope, $scope, $http) {
     $scope.search = {};
     $scope.search.orgFilter = {};
 
@@ -53,7 +56,7 @@ angular.module('govcodeApp')
     }
     
     // Get all repos
-    $http.get('http://localhost:3000/repos').success(function (data) {
+    $http.get($rootScope.apiUrl + '/repos').success(function (data) {
       // Load the repos in the scope
       $scope.repos = data;
 
@@ -62,7 +65,7 @@ angular.module('govcodeApp')
 
     });
 
-    $http.get('http://localhost:3000/orgs').success(function(data) {
+    $http.get($rootScope.apiUrl + '/orgs').success(function(data) {
       $scope.orgs = data;
       $.each(data, function(i, el) { 
         $scope.search.orgFilter[el.Id] = true;
