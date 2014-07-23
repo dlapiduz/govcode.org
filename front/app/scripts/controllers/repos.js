@@ -16,11 +16,13 @@ var mapLang = function (lang) {
 };
 // Helper to get unique langs
 var mangleLangs = function(data) {
-  var langs = $.unique($.map(data, function (el, i) {
+  var langs = $.map(data, function (el, i) {
     if (el.Language !== "") {
       return el.Language;
     }
-  }));
+  });
+
+  langs = $.unique(langs);
 
   return $.map(langs, function(el) { 
     return {

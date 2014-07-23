@@ -1,0 +1,48 @@
+<div class="col-md-12 detail">
+    <div class="back">
+        <a ng-href="/"><i class="fa fa-arrow-circle-o-left"></i></a>
+    </div>
+    <h3>
+        <a ng-href="https://github.com/{{ repo.Organization.Login }}/{{ repo.Name }}" target="_BLANK">
+            {{ repo.Organization.Login }} / {{ repo.Name }}
+        </a>
+    </h3>
+    <hr />
+    <div class="row">
+        <div class="col-md-8">
+            <h4>Project Summary</h4>
+            <p>
+                {{ repo.Description }}.
+            </p>
+            <h5 class="language">
+                <b>Main Language:</b> {{ repo.Language }}
+            </h5>
+
+            <h4>Latest Activity</h4>
+            <ul class="gh-activity">
+                <li ng-repeat="row in latest_activity">
+                    <img src="{{ row.avatar }}" />
+                    <span ng-bind-html="row.sentence" class="gh-sentence"></span>
+                    <span am-time-ago="row.timestamp"></span>.
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-4">
+            <div class="info">
+                <h4>
+                    <span>Stats</span>
+                    <i class="fa fa-code-fork"></i> 
+                    {{ repo.Forks }}
+                    <i class="fa fa-users"></i> 
+                    {{ repo.Watchers }}
+                    <i class="fa fa-star"></i> 
+                    {{ repo.Stargazers }}
+                </h4>
+            </div>
+
+            <h5>Commit Activity</h5>
+            <cjs-line dataset="graphData" height="100" width="200" options="graphOptions"></cjs-line>
+        </div>
+    </div>
+
+</div>

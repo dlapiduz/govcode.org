@@ -16,30 +16,48 @@ angular
     'ngSanitize',
     'truncate', 
     'ui.unique',
-    'angular-table'
+    'angular-table',
+    'chartjs',
+    'angularMoment',
+    'angular-google-analytics'
   ])
-  .config(function ($routeProvider) {
+  .config(['$routeProvider',
+           '$locationProvider',
+           'AnalyticsProvider',
+           function ($routeProvider, $locationProvider, AnalyticsProvider) {
+
+    AnalyticsProvider.setAccount('UA-8480852-11');
+    AnalyticsProvider.trackPages(true);
+
+    $locationProvider.html5Mode(true);
     $routeProvider
       .when('/', {
-        templateUrl: 'views/repos.html',
+        templateUrl: '/views/repos.html',
         controller: 'ReposCtrl'
       })
+      .when('/repos/:repoName', {
+        templateUrl: '/views/repo.html',
+        controller: 'RepoCtrl'
+      })
       .when('/contributors', {
-        templateUrl: 'views/contributors.html',
+        templateUrl: '/views/contributors.html',
         controller: 'ContribCtrl'
       })
       .when('/stats', {
-        templateUrl: 'views/stats.html',
+        templateUrl: '/views/stats.html',
         controller: 'StatsCtrl'
       })
       .when('/about', {
-        templateUrl: 'views/about.html',
+        templateUrl: '/views/about.html',
         controller: 'AboutCtrl'
       })
       .otherwise({
         redirectTo: '/'
       });
-  })
+  }])
+  .run(['$rootScope', function($rootScope) {
+    $rootScope.apiUrl = "http://localhost:3000";
+  }])
   .filter('multifilter', function() {
     return function(items, options) {
       if (items === undefined) { return; }

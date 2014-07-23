@@ -5,16 +5,16 @@
     <title>Government Open Source Project Explorer</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
+    <base href="/">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/fontawesome/css/font-awesome.css" />
     <!-- endbower -->
-    <link rel="stylesheet" href="vendor/fontawesome-social/css/font-awesome-social.css" />
     <link href='http://fonts.googleapis.com/css?family=Lato:400,300' rel='stylesheet' type='text/css'>
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
-    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="/styles/main.css">
     <!-- endbuild -->
   </head>
   <body>
@@ -25,13 +25,13 @@
     <!-- Add your site or application content here -->
     <div class="container-fluid" ng-controller="MainCtrl">
         <header>
-            <h1>Govcode</h1>
-            <h2>Government Open Source Projects</h2>
+            <h1><a href="/">Govcode</a></h1>
+            <h2><a href="/">Government Open Source Projects</a></h2>
             <nav>
                 <ul>
                     <li><a href="#/" ng-class="getClass('/')"><i class="fa fa-home"></i></a></li>
                     <li><a href="#/contributors"  ng-class="getClass('/contributors')">Contributors</a></li>
-                    <li><a href="#/stats" ng-class="getClass('/stats')">Stats</a></li>
+                    <!-- <li><a href="#/stats" ng-class="getClass('/stats')">Stats</a></li> -->
                     <li><a href="#/about" ng-class="getClass('/about')">About</a></li>
                 </ul>
             </nav>
@@ -53,6 +53,7 @@
     <![endif]-->
 
     <!-- build:js scripts/vendor.js -->
+    <script src="/vendor/github-sentences/github-sentences.js"></script>
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
@@ -73,20 +74,25 @@
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/angular-truncate/src/truncate.js"></script>
-    <!-- endbower -->
     <script src="bower_components/angular-ui-utils/ui-utils.js"></script>
-    <script src="bower_components/angular-ui-utils/ui-utils-ieshiv.js"></script>
-    <script src="bower_components/at-table/dist/angular-table.js"></script>
-
+    <script src="bower_components/chartjs/Chart.min.js"></script>
+    <script src="bower_components/ng-chartjs/src/angular-chartjs.js"></script>
+    <script src="bower_components/moment/moment.js"></script>
+    <script src="bower_components/angular-moment/angular-moment.js"></script>
+    <script src="bower_components/angular-google-analytics/dist/angular-google-analytics.min.js"></script>
+    <!-- endbower -->
+    <script src="/bower_components/angular-ui-utils/ui-utils-ieshiv.js"></script>
+    <script src="/bower_components/at-table/dist/angular-table.js"></script>
     <!-- endbuild -->
 
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
-    <script src="scripts/app.js"></script>
-    <script src="scripts/controllers/main.js"></script>
-    <script src="scripts/controllers/repos.js"></script>
-    <script src="scripts/controllers/contrib.js"></script>
-    <script src="scripts/controllers/stats.js"></script>
-    <script src="scripts/controllers/about.js"></script>
+    <script src="/scripts/app.js"></script>
+    <script src="/scripts/controllers/main.js"></script>
+    <script src="/scripts/controllers/repos.js"></script>
+    <script src="/scripts/controllers/repo.js"></script>
+    <script src="/scripts/controllers/contrib.js"></script>
+    <script src="/scripts/controllers/stats.js"></script>
+    <script src="/scripts/controllers/about.js"></script>
     <!-- endbuild -->
 
 

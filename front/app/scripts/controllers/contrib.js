@@ -22,6 +22,12 @@ angular.module('govcodeApp')
 
     $http.get('http://localhost:3000/users').success(function (data) {
       $scope.users = data;
+
+      $.map($scope.users, function(el) {
+        el.OrgList = el.OrgList.replace(/[\{\}]/g, "").split(',');
+        return el;
+      })
+
       $scope.updateFilteredList();
     });
 

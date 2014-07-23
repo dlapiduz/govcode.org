@@ -2,14 +2,14 @@
     <div ng-repeat="repo in filtered = (repos | multifilter:search) | orderBy:sort" class="card">
         <div class="card-head">
             <span class="{{ mapLang(repo.Language) }}">&nbsp;</span>
-            <h3>{{ repo.Name }}</h3>
+            <h3><a ng-href="/repos/{{ repo.Name }}">{{ repo.Name }}</a></h3>
         </div>
         <p>
             {{ repo.Description | characters:60: false }}
             <span ng-show="!repo.Description">No Description</span>
         </p>
         <div class="info">
-            <span> <i class="icon-git-fork"></i> {{ repo.Forks }}</span>
+            <span> <i class="fa fa-code-fork"></i> {{ repo.Forks }}</span>
             <span> <i class="fa fa-star"></i> {{ repo.Stargazers }}</span>
             <span class="author"><i class="fa fa-user"></i> {{ repo.OrganizationLogin }}</span>
         </div>
@@ -43,10 +43,10 @@
         <div class="filter">
             <h4>Filter by last activity</h4>
             <div class="filter_cont">
-                <input ng-model="search.lastActivity" type="range" min="1" max="12" value="6" /> <br />
                 <span>
-                    Active in the last {{ search.lastActivity }} months<span ng-show="search.lastActivity >= 12"> or more</span>.
+                    Active in the last <b>{{ search.lastActivity }} months<span ng-show="search.lastActivity >= 12"> or more</span></b>.
                 </span>
+                <input ng-model="search.lastActivity" type="range" min="1" max="12" value="6" />
 
             </div>
         </div>

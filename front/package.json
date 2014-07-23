@@ -1,7 +1,9 @@
 {
   "name": "govcode",
   "version": "0.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "connect-modrewrite": "^0.7.6"
+  },
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-autoprefixer": "^0.7.3",

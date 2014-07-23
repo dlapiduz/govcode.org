@@ -14,7 +14,10 @@
     "angular-truncate": "latest",
     "fontawesome": "latest",
     "at-table": "~1.0.1",
-    "angular-ui-utils": "~0.1.1"
+    "angular-ui-utils": "~0.1.1",
+    "ng-chartjs": "*",
+    "angular-moment": "~0.7.1",
+    "angular-google-analytics": "~0.0.3"
   },
   "devDependencies": {
     "angular-mocks": "1.2.16",

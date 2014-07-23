@@ -30,6 +30,10 @@ h1 {
     border-right: 1px solid #ccc;
     color: #fff;
     font-weight: 300;
+    a, a:hover, a:active, a:visited {
+        color: #fff;
+        text-decoration: none;
+    }
 }
 
 h2 {
@@ -38,13 +42,17 @@ h2 {
     padding: 0;
     float: left;
     font-weight: 300;
+    a, a:hover, a:active, a:visited {
+        color: #fff;
+        text-decoration: none;
+    }
 }
 
 header {
     clear: both;
     width: 100%;
     padding: 40px 0 30px 10px;
-    background: #454545;
+    background: #333;
     margin-bottom: 20px;
 
 }
@@ -62,7 +70,7 @@ header {
 }
 
 .card .card-head {
-    background-color: #454545;
+    background-color: #565656;
     margin: 0;
     height: 40px;
 }
@@ -70,7 +78,7 @@ header {
 .card .card-head span {
     float: left;
     display: block;
-    width: 20px;
+    width: 10px;
     height: 40px;
 }
 
@@ -109,9 +117,15 @@ header {
     font-size: 13px;
     line-height: 16px;
     color: #fff;
-    padding: 12px;
+    padding: 12px 5px;
     margin: 0;
     font-family: 'Lato';
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    a {
+        color: #fff;
+    }
 }
 
 .card p {
@@ -135,52 +149,62 @@ header {
     color: #f80;
 }
 
-.filters {
-  padding: 0;
-  margin: 10px;
-  /*border-right: 1px solid #ccc;*/
-
-  h3 {
-    font-weight: 300;
-    font-size: 18px;
-    margin: 0;
-    margin-bottom: 20px;
-  }
-
-  select {
-    width: 100%;
-  }
-
-  .filter {
-    box-shadow: 0px 0px 3px 0px #BBB;
-    background: #fff;
-    margin-bottom: 20px;
-    li {
-      padding: 0;
-      margin: 0;
-    }
-    .filter_cont {
-      padding: 10px;
-    }
-  }
-
-  h4 {
-    text-transform: uppercase;
-    font-size: 14px;
-    color: #fff;
-    background-color: #454545;
-    margin: 0;
-    padding: 12px;
-    font-family: 'Lato';
-  }
-
-  ul {
-    list-style: none;
-    margin: 0;
+.side {
+    background: #ddd;
     padding: 0;
-    margin-top: 5px;
-    margin-bottom: 20px;
-  }
+    margin-top: 10px;
+
+    .filters {
+      padding: 0;
+      /*border-right: 1px solid #ccc;*/
+
+      h3 {
+        font-weight: 300;
+        font-size: 18px;
+        margin: 0;
+        padding: 20px 25px;
+        font-weight: 400;
+      }
+
+      select {
+        width: 100%;
+      }
+
+      .filter {
+        .filter_cont {
+          padding: 15px 25px;
+          .sort label {
+            font-weight: 300;
+          }
+        }
+
+        .sub_filters {
+          margin-bottom: 10px;
+          a {
+            margin-left: 10px;
+          }
+        }
+      }
+
+      h4 {
+        text-transform: uppercase;
+        font-size: 14px;
+        color: #fff;
+        background-color: #888;
+        margin: 0;
+        padding: 13px 25px;
+        font-family: 'Lato';
+      }
+
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        margin-top: 5px;
+        margin-bottom: 20px;
+      }
+    }
+
 }
 
 nav {
@@ -214,4 +238,54 @@ nav ul li a.current, nav ul li a:hover {
 
 .find-box {
     margin: 20px 0;
+}
+
+.detail {
+    h3 {
+        margin: 0;
+        line-height: 30px;
+    }
+    div.back {
+        float: left;
+        font-size: 35px;
+        margin-right: 20px;
+        line-height: 35px;
+    }
+    .info {
+        clear: both;
+        margin-bottom: 20px;
+        h4 {
+          font-weight: 300;
+          span {
+            font-weight: 400;
+          }
+        }
+        i {
+            margin-left: 20px;
+            font-size: 16px;
+            color: #f80;
+            padding-right: 5px;
+        }
+    }
+    .gh-activity {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        img {
+            width: 36px;
+            height: 36px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        span.gh-sentence {
+        }
+    }
+    h5.language {
+      font-weight: 300;
+      margin-bottom: 30px;
+      b {
+        font-weight: 400;
+      }
+    }
 }

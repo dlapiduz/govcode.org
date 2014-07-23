@@ -7,6 +7,8 @@
 // use this if you want to recursively match all subfolders:
 // 'test/spec/**/*.js'
 
+var modRewrite = require('connect-modrewrite');
+
 module.exports = function (grunt) {
 
   // Load grunt tasks automatically
@@ -35,7 +37,6 @@ module.exports = function (grunt) {
       },
       js: {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
-        tasks: ['newer:jshint:all'],
         options: {
           livereload: '<%= connect.options.livereload %>'
         }
@@ -85,6 +86,9 @@ module.exports = function (grunt) {
                 '/vendor',
                 connect.static('./vendor')
               ),
+              modRewrite([
+                '!\\.html|\\.js|\\.css|\\.png$ /index.html [L]'
+              ]),
               connect.static(appConfig.app)
             ];
           }

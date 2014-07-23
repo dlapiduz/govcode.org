@@ -2,6 +2,9 @@
     <h3>
         Top Contributors
     </h3>
+    <p>
+      This is a list of the contributors of the projects tracked. Some inaccurancoes might occur due to fluctuations in Github's API.
+    </p>
 
     <div class="find-box">
       <form class="form-inline" role="form">
@@ -27,7 +30,13 @@
             </a>
           </td>
           <td at-attribute="CommitCount" at-sortable at-implicit at-initial-sorting="desc" width="50" at-title="Commits"></td>
-          <td at-attribute="OrgList" at-implicit width="200" at-title="Organizations"></td>
+          <td at-attribute="OrgList" width="200" at-title="Organizations">
+            <span ng-repeat="org in item.OrgList">
+              <a href="https://github.com/{{ org }}" target="_BLANK">
+                {{ org }}
+              </a> 
+            </span>
+          </td>
         </tr>
       </tbody>
     </table>
