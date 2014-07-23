@@ -19,15 +19,11 @@ angular
     'angular-table',
     'chartjs',
     'angularMoment',
-    'angular-google-analytics'
+    'angulartics', 'angulartics.google.analytics'
   ])
   .config(['$routeProvider',
            '$locationProvider',
-           'AnalyticsProvider',
-           function ($routeProvider, $locationProvider, AnalyticsProvider) {
-
-    AnalyticsProvider.setAccount('UA-8480852-11');
-    AnalyticsProvider.trackPages(true);
+           function ($routeProvider, $locationProvider) {
 
     $locationProvider.html5Mode(true);
     $routeProvider

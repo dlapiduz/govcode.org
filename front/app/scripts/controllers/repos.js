@@ -22,7 +22,9 @@ var mangleLangs = function(data) {
     }
   });
 
-  langs = $.unique(langs);
+  langs = langs.filter(function(el, index, arr) {
+    return index == arr.indexOf(el);
+  });
 
   return $.map(langs, function(el) { 
     return {

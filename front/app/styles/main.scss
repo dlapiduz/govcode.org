@@ -85,32 +85,64 @@ header {
 .card .card-head span {
     font-size: 24px;
     line-height: 16px;
-    background-color: rgb(0, 210, 180);
+    background-color: #3EF2AD;
 }
 
-.card .card-head span.ruby {
-    background-color: rgb(210, 0, 0);
+.card .card-head {
+  span.ruby {
+      background-color: #EA5172;
+  }
+
+  span.c {
+      background-color: #501367;
+  }
+
+  span.python {
+      background-color: #16E56D;
+  }
+
+  span.shell {
+      background-color: #E49956;
+  }
+
+  span.javascript, span.coffeescript {
+      background-color: #AD51DE;
+  }
+
+  span.java {
+      background-color: #5160BB;
+  }
+
+  span.css {
+      background-color: #07DAF5;
+  }
+
+  span.objective-c, span.swift {
+      background-color: #E0E0E0;
+  }
+
+  span.php {
+      background-color: #F14B8E;
+  }
+
+  span.go {
+      background-color: #0887E5;
+  }
+
+  span.perl {
+      background-color: #E49956;
+  }
+
+  span.matlab {
+      background-color: #F5F416;
+  }
+
+  span.logos {
+      background-color: #F04919;
+  }
+
 }
 
-.card .card-head span.c {
-    background-color: rgb(199,205,43);
-}
-
-.card .card-head span.python {
-    background-color: rgb(38,147,255);
-}
-
-.card .card-head span.javascript {
-    background-color: rgb(195, 22, 195);
-}
-
-.card .card-head span.shell {
-    background-color: rgb(255,122,77);
-}
-
-.card .card-head span.coffeescript {
-    background-color: rgb(140,70,0);
-}
 
 .card h3 {
     text-transform: uppercase;
