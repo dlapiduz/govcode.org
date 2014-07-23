@@ -5,8 +5,6 @@ import (
 	"github.com/martini-contrib/cors"
 	"github.com/martini-contrib/render"
 	c "govcode.org/common"
-	"log"
-	"os"
 )
 
 func main() {
@@ -22,7 +20,7 @@ func main() {
 
 	m.Group("/repos", func(r martini.Router) {
 		r.Get("", ReposIndex)
-		r.Get("/:id", ReposShow)
+		r.Get("/:name", ReposShow)
 	})
 
 	m.Group("/orgs", func(r martini.Router) {
@@ -39,11 +37,6 @@ func main() {
 }
 
 func ReposIndex(r render.Render) {
-
-	c.DB.SetLogger(log.New(os.Stdout, "\r\n", 0))
-
-	c.DB.LogMode(true)
-
 	var results []c.Repository
 	rows := c.DB.Table("repositories")
 	rows = rows.Select(`repositories.*, organizations.login as organization_login,
@@ -57,10 +50,13 @@ func ReposIndex(r render.Render) {
 }
 
 func ReposShow(r render.Render, params martini.Params) {
-	var result c.Repository
-	c.DB.Where("id = ?", params["id"]).First(&result)
 
-	r.JSON(200, result)
+	var repo c.Repository
+	c.DB.Where("name = ?", params["name"]).First(&repo)
+	c.DB.Model(&repo).Related(&repo.Organization)
+	c.DB.Model(&repo).Related(&repo.RepoStat)
+
+	r.JSON(200, repo)
 }
 
 func OrgsIndex(r render.Render) {
