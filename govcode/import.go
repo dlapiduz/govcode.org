@@ -68,7 +68,9 @@ func getAccounts() (orgs []string) {
 
 	orgs = append(orgs, []string{"MeasureAuthoringTool", "blue-button", "ngageoint", "afrl",
 		"virtual-world-framework", "usnistgov", "govxteam", "commercegov",
-		"ncats", "missioncommand"}...)
+		"ncats", "missioncommand", "NCBITools", "chaos", "petsc", "fccdata",
+		"ARM-DOE", "USGS-R", "Smithsonian", "NIST-BWS", "NOAA-ORR-ERD", "Innovation-Toolkit",
+		"NationalGuard", "nasajpl", "ioos", "usnistgov", "HHSIDEAlab", "government-services"}...)
 
 	for _, e := range data.Accounts {
 		orgs = append(orgs, e.Account)
