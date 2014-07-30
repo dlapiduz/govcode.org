@@ -8,6 +8,11 @@ import (
 )
 
 func main() {
+	m := App()
+	m.Run()
+}
+
+func App() *martini.ClassicMartini {
 	m := martini.Classic()
 
 	m.Use(render.Renderer(render.Options{
@@ -33,7 +38,7 @@ func main() {
 		r.Get("/:id", UserShow)
 	})
 
-	m.Run()
+	return m
 }
 
 func ReposIndex(r render.Render) {
