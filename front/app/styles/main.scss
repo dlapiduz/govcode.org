@@ -299,7 +299,7 @@ nav ul li a.current, nav ul li a:hover {
             padding-right: 5px;
         }
     }
-    .gh-activity {
+    .gh-activity, .gh-issues {
         list-style: none;
         margin: 0;
         padding: 0;
@@ -320,4 +320,24 @@ nav ul li a.current, nav ul li a:hover {
         font-weight: 400;
       }
     }
+    ul.contributors {
+      list-style: none;
+      padding: 0;
+      line-height: 40px;
+      li {
+        display: inline;
+        margin-right: 3px;
+        margin-bottom: 3px;
+        img {
+          box-shadow: 0px 0px 3px 0px #999;
+        }
+      }
+    }
+}
+
+.feedback_form {
+  width: 450px;
+
+  .wufoo .info{display:none}
+
 }

@@ -18,12 +18,33 @@
                 <b>Main Language:</b> {{ repo.Language }}
             </h5>
 
+            <h4>Open Issues</h4>
+            <ul class="gh-issues">
+                <li ng-repeat="issue in issues">
+                    <a ng-href="{{ issue.html_url }}">
+                        <i class="fa fa-exclamation-circle"></i>
+                        {{ issue.title }}
+                    </a>
+                </li>
+                <li ng-show="viewMoreActivities">
+                    <a ng-href="https://github.com/{{ repo.Organization.Login }}/{{ repo.Name }}/issues" target="_BLANK">
+                        View More
+                    </a>
+                </li>
+            </ul>
+
+
             <h4>Latest Activity</h4>
             <ul class="gh-activity">
                 <li ng-repeat="row in latest_activity">
                     <img src="{{ row.avatar }}" />
                     <span ng-bind-html="row.sentence" class="gh-sentence"></span>
                     <span am-time-ago="row.timestamp"></span>.
+                </li>
+                <li ng-show="viewMoreActivities">
+                    <a ng-href="https://github.com/{{ repo.Organization.Login }}/{{ repo.Name }}/pulse" target="_BLANK">
+                        View More
+                    </a>
                 </li>
             </ul>
         </div>
@@ -40,8 +61,19 @@
                 </h4>
             </div>
 
+            <h5>Contributors</h5>
+            <ul class="contributors">
+                <li ng-repeat="contributor in contributors">
+                    <a ng-href="{{ contributor.html_url }}" target="_BLANK">
+                        <img src="{{ contributor.avatar_url }}" title="{{ contributor.login }} Avatar" width="36" />
+                    </a>
+                </li>
+            </ul>
+
             <h5>Commit Activity</h5>
-            <cjs-line dataset="graphData" height="100" width="200" options="graphOptions"></cjs-line>
+            <div width="100%">
+                <cjs-line dataset="graphData" autofit="true" options="graphOptions"></cjs-line>
+            </div>
         </div>
     </div>
 

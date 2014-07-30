@@ -80,13 +80,28 @@ angular.module('govcodeApp')
         };
       }
 
+      var base_api_url = 'https://api.github.com/repos/' + $scope.repo.Organization.Login + '/' + $scope.repo.Name;
+      
       // Load latest activity
-      var activity_url = 'https://api.github.com/repos/' + $scope.repo.Organization.Login + '/' + $scope.repo.Name + '/events';
-      $http.get(activity_url).success(function (data) {
-        $scope.latest_activity = $.map(data, function(el) {
+      $http.get(base_api_url + '/events', { cache: true }).success(function (data) {
+        $scope.viewMoreActivities = (data.length > 10);
+        $scope.latest_activity = $.map(data.slice(0, 10), function(el) {
           return githubSentences.convert(el);
         });
       });
+
+      // Load contributors
+      $http.get(base_api_url + '/contributors', { cache: true }).success(function (data) {
+        $scope.contributors = data;
+      });
+
+      // Load issues
+      $http.get(base_api_url + '/issues', { cache: true }).success(function (data) {
+        $scope.viewIssues = (data.length > 0);
+        $scope.viewMoreIssues = (data.length > 10);
+        $scope.issues = data.slice(0, 10);
+      });
+
     });
 
   }]);

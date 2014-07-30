@@ -56,7 +56,7 @@ angular.module('govcodeApp')
     }
     
     // Get all repos
-    $http.get($rootScope.apiUrl + '/repos').success(function (data) {
+    $http.get($rootScope.apiUrl + '/repos', { cache: true }).success(function (data) {
       // Load the repos in the scope
       $scope.repos = data;
 
@@ -65,7 +65,7 @@ angular.module('govcodeApp')
 
     });
 
-    $http.get($rootScope.apiUrl + '/orgs').success(function(data) {
+    $http.get($rootScope.apiUrl + '/orgs', { cache: true }).success(function(data) {
       $scope.orgs = data;
       $.each(data, function(i, el) { 
         $scope.search.orgFilter[el.Id] = true;
