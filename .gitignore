@@ -1,3 +1,5 @@
 govcode/govcode
 .env
 node_modules
+.DS_Store
+gin-bin
