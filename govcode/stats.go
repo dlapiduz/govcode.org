@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	c "govcode.org/common"
+	c "github.com/dlapiduz/govcode.org/common"
 	"time"
 )
 

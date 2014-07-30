@@ -1,10 +1,10 @@
 package main
 
 import (
+	c "github.com/dlapiduz/govcode.org/common"
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/cors"
 	"github.com/martini-contrib/render"
-	c "govcode.org/common"
 )
 
 func main() {

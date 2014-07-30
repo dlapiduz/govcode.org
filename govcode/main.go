@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/codegangsta/cli"
-	c "govcode.org/common"
+	c "github.com/dlapiduz/govcode.org/common"
 	"os"
 )
 
