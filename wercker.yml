@@ -1,0 +1,18 @@
+box: wercker/golang
+build:
+    steps:
+      - script:
+          name: run suite for govcoded
+          cwd: govcoded/
+          code: |
+            go get
+            go vet
+            go test
+            go build
+      - script:
+          name: run suite for govcode
+          cwd: govcode/
+          code: |
+            go get
+            go vet
+            go build
