@@ -152,6 +152,7 @@ func importRepos(org *c.Organization, client *github.Client, page int) {
 					repo.Description = *r.Description
 				}
 				repo.OrganizationId = org.Id
+				repo.Ignore = false
 			}
 			repo.Forks = int64(*r.ForksCount)
 			repo.Watchers = int64(*r.WatchersCount)
@@ -162,10 +163,12 @@ func importRepos(org *c.Organization, client *github.Client, page int) {
 
 			c.DB.Save(&repo)
 
-			sem <- true
-			go importStats(&repo, org, client, &sem)
+			if !repo.Ignore {
+				sem <- true
+				go importStats(&repo, org, client, &sem)
 
-			importPulls(&repo, org, client, 1)
+				importPulls(&repo, org, client, 1)
+			}
 		}
 	}
 
