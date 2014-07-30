@@ -2,6 +2,9 @@ box: wercker/golang
 build:
     steps:
       - script:
+          name: Show go env
+          code: go env
+      - script:
           name: run suite for govcoded
           cwd: govcoded/
           code: |
