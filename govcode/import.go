@@ -66,11 +66,20 @@ func getAccounts() (orgs []string) {
 	err = json.Unmarshal(body, &data)
 	c.PanicOn(err)
 
-	orgs = append(orgs, []string{"MeasureAuthoringTool", "blue-button", "ngageoint", "afrl",
-		"virtual-world-framework", "usnistgov", "govxteam", "commercegov",
-		"ncats", "missioncommand", "NCBITools", "chaos", "petsc", "fccdata",
-		"ARM-DOE", "USGS-R", "Smithsonian", "NIST-BWS", "NOAA-ORR-ERD", "Innovation-Toolkit",
-		"NationalGuard", "nasajpl", "ioos", "usnistgov", "HHSIDEAlab", "government-services"}...)
+	orgs = append(orgs, []string{"afrl", "arcticlcc", "arm-doe", "bbginnovate",
+	"blue-button", "ca-cst-sii", "chaos", "cocomans", "commercegov", "cooperhewitt",
+	"eeoc", "energyapps", "fccdata", "federal-aviation-administration", "globegit",
+	"gopleader", "government-services", "govxteam", "greatsmokymountainsnationalpark",
+	"hhsdigitalmediaapiplatform", "hhsidealab", "imdprojects", "innovation-toolkit",
+	"ioos", "irsgov", "jbei", "kbase", "m-o-s-e-s", "measureauthoringtool", "missioncommand",
+	"nasa-gibs", "nasa-rdt", "nasajpl", "nationalguard", "ncats", "ncbitools",
+	"ncpp", "ncrn", "ndar", "neogeographytoolkit", "nersc", "ngageoint", "ngds",
+	"nhanes", "niem", "nist-bws", "nist-ics-sec-tb", "nistdeepzoom", "nmml",
+	"noaa-orr-erd", "nrel-cookbooks", "ozone-development", "petsc", "pm-master",
+	"servir", "smithsonian", "sunpy", "usbr", "usdeptveteransaffairs", "usgcrp",
+	"usgin-models", "usgs-astrogeology", "usgs-cida", "usgs-owi", "usgs-r", "usindianaffairs",
+	"usnistgov", "usps", "vhainnovations", "virtual-world-framework", "visionworkbench",
+	"wfmrda"}...)
 
 	for _, e := range data.Accounts {
 		orgs = append(orgs, e.Account)
