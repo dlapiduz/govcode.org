@@ -2,6 +2,8 @@
 Govcode
 =============
 
+[![wercker status](https://app.wercker.com/status/a02fb4fa99d40f8de4e90722491b7c2a/s "wercker status")](https://app.wercker.com/project/bykey/a02fb4fa99d40f8de4e90722491b7c2a)
+
 ## What is this?
 
 Govcode is an application that lists government open source projects.
