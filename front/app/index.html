@@ -31,7 +31,7 @@
                 <ul>
                     <li><a href="#/" ng-class="getClass('/')"><i class="fa fa-home"></i></a></li>
                     <li><a href="#/contributors"  ng-class="getClass('/contributors')">Contributors</a></li>
-                    <!-- <li><a href="#/stats" ng-class="getClass('/stats')">Stats</a></li> -->
+                    <li><a href="#/stats" ng-class="getClass('/stats')">Stats</a></li>
                     <li><a href="#/about" ng-class="getClass('/about')">About</a></li>
                 </ul>
             </nav>
@@ -42,6 +42,17 @@
 
         <div class="row-fluid">
             <div ng-view></div>
+        </div>
+
+        <div class="row-fluid">
+            <div class="col-md-12 footer">
+                <small>
+                    This is not a government sponsored website.
+                    <a href="https://github.com/dlapiduz/govcode" target="_BLANK">Fork this project</a>.
+                    <a href="https://github.com/dlapiduz/govcode/issues" target="_BLANK">Have feedback? Create an issue</a>.
+                </small>
+
+            </div>
         </div>
 
     </div><!-- /.container -->

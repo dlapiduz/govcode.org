@@ -1,1 +1,41 @@
-stats
+<div class="col-md-12 detail">
+  <div class="back">
+      <a ng-href="/"><i class="fa fa-arrow-circle-o-left"></i></a>
+  </div>
+  <h3>Statistics <small>(top 10 organizations selected by default)</small></h3>
+  <hr />
+  <div class="row">
+    <div class="col-md-9">
+      <h4>Repository count</h4>
+      <div style="width: 90%; height: 400px; padding: 10px;">
+        <cjs-bar dataset="countGraphData" options="countGraphOptions" autofit="true"></cjs-bar>
+      </div>
+
+      <h4>Commit count</h4>
+      <div style="width: 90%; height: 400px; padding: 10px;">
+        <cjs-line dataset="commitGraphData" options="commitGraphOptions" autofit="true"></cjs-line>
+      </div>
+    </div>
+
+
+    <div class="col-md-3 side">
+      <div class="filters">
+        <div class="filter">
+            <h4>Select Organizations</h4>
+            <div class="filter_cont">
+                <div class="sub_filters">
+                    <input type="text" placeholder="Find Orgs" ng-model="filterOrgs" />
+                    <a href="" ng-click="allOrgs(true)">All</a>
+                    <a href="" ng-click="allOrgs(false)">None</a>
+                </div>
+                <ul>
+                    <li ng-repeat="org in orgs | orderBy:'Login' | filter:filterOrgs ">
+                        <input type="checkbox" ng-model="orgFilter[org.Id]" name="filter_org" CHECKED /> {{ org.Name }} <span ng-show="!org.Name"> {{ org.Login }}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
