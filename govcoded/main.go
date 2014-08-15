@@ -4,7 +4,9 @@ import (
 	c "github.com/dlapiduz/govcode.org/common"
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/cors"
+	"github.com/martini-contrib/gzip"
 	"github.com/martini-contrib/render"
+	"time"
 )
 
 func main() {
@@ -15,12 +17,14 @@ func main() {
 func App() *martini.ClassicMartini {
 	m := martini.Classic()
 
+	m.Use(gzip.All())
+
 	m.Use(render.Renderer(render.Options{
 		Directory: "templates",
 	}))
 
 	m.Use(cors.Allow(&cors.Options{
-		AllowOrigins: []string{"*"},
+		AllowAllOrigins: true,
 	}))
 
 	m.Group("/repos", func(r martini.Router) {
@@ -37,6 +41,8 @@ func App() *martini.ClassicMartini {
 		r.Get("", UserIndex)
 		r.Get("/:id", UserShow)
 	})
+
+	m.Get("/stats", StatsIndex)
 
 	return m
 }
@@ -88,6 +94,57 @@ func UserIndex(r render.Render) {
 func UserShow(r render.Render, params martini.Params) {
 	var result c.User
 	c.DB.Where("id = ?", params["id"]).First(&result)
+
+	r.JSON(200, result)
+}
+
+func StatsIndex(r render.Render) {
+	// Get the repo counts per org
+	type repoCount struct {
+		OrganizationLogin string
+		RepoCount         int64
+	}
+	var repo_counts []repoCount
+	rows := c.DB.Table("repositories")
+	rows = rows.Select(`organizations.login as organization_login, 
+		count(repositories.name) as repo_count
+		`)
+	rows = rows.Joins("inner join organizations on organizations.id = repositories.organization_id")
+	rows = rows.Group("organizations.login")
+	rows = rows.Order("repo_count desc")
+	rows.Scan(&repo_counts)
+
+	// Get commit stats per org per month for the past year
+	type orgStat struct {
+		OrganizationLogin string
+		Week              time.Time
+		Month             string
+		Add               int64
+		Del               int64
+		Commits           int64
+	}
+	var org_stats []orgStat
+	rows = c.DB.Debug().Table("repo_stats")
+	rows = rows.Select(`organizations.login as organization_login,
+		min(repo_stats.week) as week,
+		TO_CHAR(repo_stats.week, 'Mon YYYY') as month,
+		sum(repo_stats.add) as add,
+		sum(repo_stats.del) as del,
+		sum(repo_stats.commits) as commits
+	`)
+	rows = rows.Joins(`inner join repositories on repositories.id = repo_stats.repository_id
+		inner join organizations on organizations.id = repositories.organization_id
+	`)
+	rows = rows.Where("repo_stats.week > now()::date - 365")
+	rows = rows.Group("organizations.login, month")
+	rows = rows.Order("week")
+	rows.Scan(&org_stats)
+
+	var result map[string]interface{}
+	result = make(map[string]interface{})
+
+	result["repo_counts"] = repo_counts
+	result["org_stats"] = org_stats
 
 	r.JSON(200, result)
 }
