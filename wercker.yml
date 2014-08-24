@@ -59,7 +59,7 @@ deploy:
         code: tar cfz release.tar.gz deploy/*
     - github-create-release:
         token: $GITHUB_TOKEN
-        tag: v2.0.0
+        tag: v2.0.1
     - github-upload-asset:
         token: $GITHUB_TOKEN
         file: release.tar.gz
