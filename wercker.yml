@@ -1,7 +1,6 @@
 box: wercker/golang
 steps:
-  - wercker/github-create-release@1.0.1
-  - wercker/github-upload-asset@1.0.1
+  - dlapiduz/github-create-deployment@0.0.1
 build:
   steps:
     - setup-go-workspace
@@ -30,36 +29,6 @@ build:
             rsync -avzv --exclude "$WERCKER_SOURCE_DIR" "$GOPATH/" "$WERCKER_CACHE_DIR/go-pkg-cache/"
 deploy:
   steps:
-    - setup-go-workspace
-    - script:
-        name: Populate cache
-        code: |
-            if test -d "$WERCKER_CACHE_DIR/go-pkg-cache"; then rsync -avzv --exclude "$WERCKER_SOURCE_DIR" "$WERCKER_CACHE_DIR/go-pkg-cache/" "$GOPATH/" ; fi
-    - script:
-        name: build govcoded
-        cwd: govcoded/
-        code: |
-          go get -t ./...
-          go build ./...
-    - script:
-        name: build govcode
-        cwd: govcode/
-        code: |
-          go get -t ./...
-          go build ./...
-    - script:
-        name: copy files
-        code: |
-          mkdir deploy
-          cp govcoded/govcoded deploy/
-          cp govcode/govcode deploy/
-          ls deploy/
-    - script:
-        name: Create archive
-        code: tar cfz release.tar.gz deploy/*
-    - github-create-release:
+    - github-create-deployment:
         token: $GITHUB_TOKEN
-        tag: v2.0.1
-    - github-upload-asset:
-        token: $GITHUB_TOKEN
-        file: release.tar.gz
+        environment: demo
