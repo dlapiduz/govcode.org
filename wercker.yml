@@ -1,6 +1,6 @@
 box: wercker/golang
 steps:
-  - dlapiduz/github-create-deployment@0.0.1
+  - dlapiduz/github-create-deployment
 build:
   steps:
     - setup-go-workspace
