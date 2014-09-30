@@ -31,4 +31,4 @@ deploy:
   steps:
     - dlapiduz/github-create-deployment:
         token: $GITHUB_TOKEN
-        environment: demo
+        environment: $GITHUB_DEPLOY_ENV
