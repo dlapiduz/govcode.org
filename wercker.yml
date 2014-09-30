@@ -29,6 +29,6 @@ build:
             rsync -avzv --exclude "$WERCKER_SOURCE_DIR" "$GOPATH/" "$WERCKER_CACHE_DIR/go-pkg-cache/"
 deploy:
   steps:
-    - github-create-deployment:
+    - dlapiduz/github-create-deployment:
         token: $GITHUB_TOKEN
         environment: demo
