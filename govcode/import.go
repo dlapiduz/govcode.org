@@ -9,9 +9,76 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strings"
 	"sync"
 	"time"
 )
+
+func runImport() (err error) {
+	gh_key := os.Getenv("GH_KEY")
+
+	t := &oauth.Transport{
+		Token: &oauth.Token{AccessToken: gh_key},
+	}
+
+	client := github.NewClient(t.Client())
+
+	orgs := getAccounts()
+	importOrgs(orgs, client) // Also pulls the repos
+
+	concurrency := 10
+
+	sem := make(chan bool, concurrency)
+
+	var repos []c.Repository
+	rows := c.DB.Table("repositories")
+	rows = rows.Select(`repositories.*, organizations.login as organization_login,
+		date_part('day', now() - last_pull) as days_since_pull,
+		date_part('day', now() - last_commit) as days_since_commit
+		`)
+	rows = rows.Joins("inner join organizations on organizations.id = repositories.organization_id")
+	rows = rows.Order("updated_at")
+	rows.Scan(&repos)
+
+	for _, r := range repos {
+		sem <- true
+		if r.OrganizationLogin == "" {
+			<-sem
+			continue
+		}
+
+		if !r.Ignore {
+			err := importStats(&r, r.OrganizationLogin, client)
+			if err != nil {
+				fmt.Println("There has been an error with stats")
+				if strings.Contains(err.Error(), "404") {
+					<-sem
+					continue
+				}
+				c.PanicOn(err)
+			}
+
+			err = importPulls(&r, r.OrganizationLogin, client, 1)
+			if err != nil {
+				fmt.Println("There has been an error with stats")
+				if strings.Contains(err.Error(), "404") {
+					<-sem
+					continue
+				}
+				c.PanicOn(err)
+			}
+
+		}
+		c.DB.Save(&r)
+		<-sem
+	}
+
+	for i := 0; i < cap(sem); i++ {
+		sem <- true
+	}
+
+	return nil
+}
 
 func getStr(str *string) string {
 	if str == nil {
@@ -36,21 +103,6 @@ func findOrCreateUser(user *c.User) int64 {
 	return new_user.Id
 }
 
-func runImport() (err error) {
-	gh_key := os.Getenv("GH_KEY")
-
-	t := &oauth.Transport{
-		Token: &oauth.Token{AccessToken: gh_key},
-	}
-
-	client := github.NewClient(t.Client())
-
-	orgs := getAccounts()
-	importOrgs(orgs, client)
-
-	return nil
-}
-
 func getAccounts() (orgs []string) {
 	url := "http://registry.usa.gov/accounts.json?service_id=github"
 	res, err := http.Get(url)
@@ -67,19 +119,19 @@ func getAccounts() (orgs []string) {
 	c.PanicOn(err)
 
 	orgs = append(orgs, []string{"afrl", "arcticlcc", "arm-doe", "bbginnovate",
-	"blue-button", "ca-cst-sii", "chaos", "cocomans", "commercegov", "cooperhewitt",
-	"eeoc", "energyapps", "fccdata", "federal-aviation-administration", "globegit",
-	"gopleader", "government-services", "govxteam", "greatsmokymountainsnationalpark",
-	"hhsdigitalmediaapiplatform", "hhsidealab", "imdprojects", "innovation-toolkit",
-	"ioos", "irsgov", "jbei", "kbase", "m-o-s-e-s", "measureauthoringtool", "missioncommand",
-	"nasa-gibs", "nasa-rdt", "nasajpl", "nationalguard", "ncats", "ncbitools",
-	"ncpp", "ncrn", "ndar", "neogeographytoolkit", "nersc", "ngageoint", "ngds",
-	"nhanes", "niem", "nist-bws", "nist-ics-sec-tb", "nistdeepzoom", "nmml",
-	"noaa-orr-erd", "nrel-cookbooks", "ozone-development", "petsc", "pm-master",
-	"servir", "smithsonian", "sunpy", "usbr", "usdeptveteransaffairs", "usgcrp",
-	"usgin-models", "usgs-astrogeology", "usgs-cida", "usgs-owi", "usgs-r", "usindianaffairs",
-	"usnistgov", "usps", "vhainnovations", "virtual-world-framework", "visionworkbench",
-	"wfmrda"}...)
+		"blue-button", "ca-cst-sii", "chaos", "cocomans", "commercegov", "cooperhewitt",
+		"eeoc", "energyapps", "fccdata", "federal-aviation-administration", "globegit",
+		"gopleader", "government-services", "govxteam", "greatsmokymountainsnationalpark",
+		"hhsdigitalmediaapiplatform", "hhsidealab", "imdprojects", "innovation-toolkit",
+		"ioos", "irsgov", "jbei", "kbase", "m-o-s-e-s", "measureauthoringtool", "missioncommand",
+		"nasa-gibs", "nasa-rdt", "nasajpl", "nationalguard", "ncats", "ncbitools",
+		"ncpp", "ncrn", "ndar", "neogeographytoolkit", "nersc", "ngageoint", "ngds",
+		"nhanes", "niem", "nist-bws", "nist-ics-sec-tb", "nmml",
+		"noaa-orr-erd", "nrel-cookbooks", "ozone-development", "petsc", "pm-master",
+		"servir", "smithsonian", "sunpy", "usbr", "usdeptveteransaffairs", "usgcrp",
+		"usgin-models", "usgs-astrogeology", "usgs-cida", "usgs-owi", "usgs-r", "usindianaffairs",
+		"usnistgov", "usps", "vhainnovations", "virtual-world-framework", "visionworkbench",
+		"wfmrda"}...)
 
 	for _, e := range data.Accounts {
 		orgs = append(orgs, e.Account)
@@ -95,11 +147,11 @@ func importOrgs(orgs []string, client *github.Client) {
 		wg.Add(1)
 
 		go func(org_name string, wg *sync.WaitGroup) {
-			gh_org, res, err := client.Organizations.Get(org_name)
+			gh_org, _, err := client.Organizations.Get(org_name)
 			fmt.Println("Getting Org", org_name)
-			fmt.Println(res)
-			// Do not panic, probably 404 error
+
 			if err != nil {
+				fmt.Println("Error fetching orgs")
 				fmt.Println(err)
 				wg.Done()
 				return
@@ -134,20 +186,15 @@ func importRepos(org *c.Organization, client *github.Client, page int) {
 
 	repos, response, err := client.Repositories.ListByOrg(org.Login, opt)
 	fmt.Println("Getting Repos", org.Login, page)
-	fmt.Println(response)
 	if err != nil {
 		fmt.Println("Error with org: ", org.Login)
-		return
+		c.PanicOn(err)
 	}
 
 	// There are more pages, lets fetch the next one
 	if response.NextPage > 0 {
 		importRepos(org, client, response.NextPage)
 	}
-
-	concurrency := 4
-
-	sem := make(chan bool, concurrency)
 
 	for _, r := range repos {
 		if !*r.Fork {
@@ -172,30 +219,23 @@ func importRepos(org *c.Organization, client *github.Client, page int) {
 
 			c.DB.Save(&repo)
 
-			if !repo.Ignore {
-				sem <- true
-				go importStats(&repo, org, client, &sem)
-
-				importPulls(&repo, org, client, 1)
-			}
 		}
 	}
 
-	for i := 0; i < cap(sem); i++ {
-		sem <- true
-	}
 }
 
-func importStats(repo *c.Repository, org *c.Organization, client *github.Client, sem *chan bool) {
-	stats, res, err := client.Repositories.ListContributorsStats(org.Login, repo.Name)
+func importStats(repo *c.Repository, org_login string, client *github.Client) error {
+	stats, res, err := client.Repositories.ListContributorsStats(org_login, repo.Name)
 	fmt.Println("Getting stats", repo.Name)
 	fmt.Println(res)
 	if err != nil {
 		if res != nil && res.StatusCode == 202 {
 			fmt.Println("Sleeping")
 			time.Sleep(4 * time.Second)
-			importStats(repo, org, client, sem)
-			return
+			importStats(repo, org_login, client)
+			return nil
+		} else {
+			return err
 		}
 	}
 
@@ -229,27 +269,25 @@ func importStats(repo *c.Repository, org *c.Organization, client *github.Client,
 		}
 	}
 
-	<-*sem
+	return nil
 }
 
-func importPulls(repo *c.Repository, org *c.Organization, client *github.Client, page int) {
+func importPulls(repo *c.Repository, org_login string, client *github.Client, page int) error {
 	// Import pulls for a given repo
 	opt := &github.PullRequestListOptions{}
 	opt.State = "all"
 	opt.ListOptions = github.ListOptions{Page: page, PerPage: 100}
 
-	pulls, response, err := client.PullRequests.List(org.Login, repo.Name, opt)
+	pulls, response, err := client.PullRequests.List(org_login, repo.Name, opt)
 	fmt.Println("Getting pulls", repo.Name, page)
 	fmt.Println(response)
 	if err != nil {
-		fmt.Println("Error with repo pulls: ", repo.Name)
-		fmt.Println(err)
-		return
+		return err
 	}
 
 	// There are more pages, lets fetch the next one
 	if response.NextPage > 0 {
-		importPulls(repo, org, client, response.NextPage)
+		importPulls(repo, org_login, client, response.NextPage)
 	}
 
 	for _, gh_pull := range pulls {
@@ -264,8 +302,10 @@ func importPulls(repo *c.Repository, org *c.Organization, client *github.Client,
 			pull.Body = getStr(gh_pull.Body)
 			pull.Admin = *gh_pull.User.SiteAdmin
 			pull.Number = int64(*gh_pull.Number)
-			pull.GhCreatedAt.Time = *gh_pull.CreatedAt
-			pull.GhCreatedAt.Valid = true
+			if gh_pull.CreatedAt != nil {
+				pull.GhCreatedAt.Time = *gh_pull.CreatedAt
+				pull.GhCreatedAt.Valid = true
+			}
 
 			var user c.User
 			user.FromGhUser(gh_pull.User)
@@ -288,4 +328,5 @@ func importPulls(repo *c.Repository, org *c.Organization, client *github.Client,
 
 		c.DB.Save(&pull)
 	}
+	return nil
 }
