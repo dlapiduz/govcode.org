@@ -1,17 +1,18 @@
 package main
 
 import (
-	"code.google.com/p/goauth2/oauth"
 	"encoding/json"
 	"fmt"
-	c "github.com/dlapiduz/govcode.org/common"
-	"github.com/google/go-github/github"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
 	"sync"
 	"time"
+
+	"code.google.com/p/goauth2/oauth"
+	c "github.com/dlapiduz/govcode.org/common"
+	"github.com/google/go-github/github"
 )
 
 func runImport() (err error) {
@@ -33,8 +34,8 @@ func runImport() (err error) {
 	var repos []c.Repository
 	rows := c.DB.Table("repositories")
 	rows = rows.Select(`repositories.*, organizations.login as organization_login,
-		date_part('day', now() - last_pull) as days_since_pull,
-		date_part('day', now() - last_commit) as days_since_commit
+		coalesce(date_part('day', now() - last_pull), -1) as days_since_pull,
+		coalesce(date_part('day', now() - last_commit), -1) as days_since_commit
 		`)
 	rows = rows.Joins("inner join organizations on organizations.id = repositories.organization_id")
 	rows = rows.Order("updated_at")
@@ -185,7 +186,7 @@ func importRepos(org *c.Organization, client *github.Client, page int) {
 	opt.ListOptions = github.ListOptions{Page: page, PerPage: 100}
 
 	repos, response, err := client.Repositories.ListByOrg(org.Login, opt)
-	fmt.Println("Getting Repos", org.Login, page)
+	fmt.Printf("Getting Repos for org Login %s at page %d\n", org.Login, page)
 	if err != nil {
 		fmt.Println("Error with org: ", org.Login)
 		c.PanicOn(err)
@@ -279,7 +280,7 @@ func importPulls(repo *c.Repository, org_login string, client *github.Client, pa
 	opt.ListOptions = github.ListOptions{Page: page, PerPage: 100}
 
 	pulls, response, err := client.PullRequests.List(org_login, repo.Name, opt)
-	fmt.Println("Getting pulls", repo.Name, page)
+	fmt.Printf("Getting pulls for repo %s at page %d\n", repo.Name, page)
 	fmt.Println(response)
 	if err != nil {
 		return err
