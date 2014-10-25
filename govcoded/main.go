@@ -1,12 +1,13 @@
 package main
 
 import (
+	"time"
+
 	c "github.com/dlapiduz/govcode.org/common"
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/cors"
 	"github.com/martini-contrib/gzip"
 	"github.com/martini-contrib/render"
-	"time"
 )
 
 func main() {
@@ -51,8 +52,8 @@ func ReposIndex(r render.Render) {
 	var results []c.Repository
 	rows := c.DB.Table("repositories")
 	rows = rows.Select(`repositories.*, organizations.login as organization_login,
-		date_part('day', now() - last_pull) as days_since_pull,
-		date_part('day', now() - last_commit) as days_since_commit
+		coalesce(date_part('day', now() - last_pull), -1) as days_since_pull,
+		coalesce(date_part('day', now() - last_commit), -1) as days_since_commit
 		`)
 	rows = rows.Joins("inner join organizations on organizations.id = repositories.organization_id")
 	rows.Scan(&results)
