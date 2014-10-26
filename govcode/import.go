@@ -182,7 +182,7 @@ func importOrgs(orgs []string, client *github.Client) {
 
 func importRepos(org *c.Organization, client *github.Client, page int) {
 	// Load the repos for a given org
-	opt := &github.RepositoryListByOrgOptions{}
+	opt := &github.RepositoryListByOrgOptions{Type: "public"}
 	opt.ListOptions = github.ListOptions{Page: page, PerPage: 100}
 
 	repos, response, err := client.Repositories.ListByOrg(org.Login, opt)
