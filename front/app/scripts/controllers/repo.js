@@ -8,6 +8,17 @@
  * Show a repo detail
  */
 
+// Helper func to determine if issue has "help wanted"-ish label
+var isHelpWantedIssue = function (issue) {
+    var re = /help.*?wanted|want.*?help|need.*?help/i;
+    for (var label in issue.labels) {
+        if (re.test(issue.labels[label].name)) {
+            return true;
+        }
+    }
+    return false;
+};
+
 function sortObj(arr) {
   // Setup Arrays
   var sortedKeys = new Array();
@@ -99,7 +110,12 @@ angular.module('govcodeApp')
       $http.get(base_api_url + '/issues', { cache: true }).success(function (data) {
         $scope.viewIssues = (data.length > 0);
         $scope.viewMoreIssues = (data.length > 10);
-        $scope.issues = data.slice(0, 10);
+
+        var issues = data.slice(0, 10);
+          for( var i in issues ) {
+              issues[i].help_wanted = isHelpWantedIssue(issues[i]);
+          }
+        $scope.issues = issues
       });
 
     });

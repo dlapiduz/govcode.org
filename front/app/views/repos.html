@@ -12,6 +12,7 @@
             <span> <i class="fa fa-code-fork"></i> {{ repo.Forks }}</span>
             <span> <i class="fa fa-star"></i> {{ repo.Stargazers }}</span>
             <span class="author"><i class="fa fa-user"></i> {{ repo.OrganizationLogin }}</span>
+            <span ng-if="repo.HelpWantedIssueCount"><i class="fa fa-bug"></i> {{repo.HelpWantedIssueCount}}</span>
         </div>
     </div>
 
@@ -29,19 +30,23 @@
             <div class="filter_cont">
                 <div class="sort">
                     <input type="radio" value="-Forks" name="sort" id="sort_forks" ng-model="sort">
-                    <label for="sort_forks">Forks</label>
+                    <label for="sort_forks">&nbsp;<i class="fa fa-code-fork"></i> Forks</label>
                 </div>
                 <div class="sort">
                     <input type="radio" value="-Watchers" name="sort" id="sort_watchers" ng-model="sort">
-                    <label for="sort_watchers">Watchers</label>
+                    <label for="sort_watchers"> <i class="fa fa-users"></i> Watchers</label>
                 </div>
                 <div class="sort">
                     <input type="radio" value="-Stargazers" name="sort" id="sort_stars" ng-model="sort">
-                    <label for="sort_stars">Stars</label>
+                    <label for="sort_stars"> <i class="fa fa-star"></i> Stars</label>
                 </div>
                 <div class="sort">
                     <input type="radio" value="-OpenIssues" name="sort" id="sort_issues" ng-model="sort">
-                    <label for="sort_issues">Open Issues</label>
+                    <label for="sort_issues"> <i class="fa fa-exclamation-circle"></i> Open Issues</label>
+                </div>
+                <div class="sort">
+                    <input type="radio" value="-HelpWantedIssueCount" name="sort" id="sort_helpwantedissues" ng-model="sort">
+                    <label for="sort_helpwantedissues"> <i class="fa fa-bug"></i> Help Wanted Issues</label>
                 </div>
             </div>
         </div>
