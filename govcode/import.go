@@ -301,17 +301,19 @@ func importPulls(repo *c.Repository, org_login string, client *github.Client, pa
 			pull.RepositoryId = repo.Id
 			pull.Title = *gh_pull.Title
 			pull.Body = getStr(gh_pull.Body)
-			pull.Admin = *gh_pull.User.SiteAdmin
+			if gh_pull.User != nil {
+				pull.Admin = *gh_pull.User.SiteAdmin
+				var user c.User
+				user.FromGhUser(gh_pull.User)
+
+				pull.UserId = findOrCreateUser(&user)
+			}
 			pull.Number = int64(*gh_pull.Number)
 			if gh_pull.CreatedAt != nil {
 				pull.GhCreatedAt.Time = *gh_pull.CreatedAt
 				pull.GhCreatedAt.Valid = true
 			}
 
-			var user c.User
-			user.FromGhUser(gh_pull.User)
-
-			pull.UserId = findOrCreateUser(&user)
 		}
 
 		// If the pull has not been updated go to the next one
