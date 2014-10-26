@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"regexp"
 	"strings"
 	"sync"
 	"time"
@@ -198,6 +199,7 @@ func importRepos(org *c.Organization, client *github.Client, page int) {
 	}
 
 	for _, r := range repos {
+
 		if !*r.Fork {
 			var repo c.Repository
 			c.DB.Where("name = ? and organization_id = ?", *r.Name, org.Id).First(&repo)
@@ -218,6 +220,13 @@ func importRepos(org *c.Organization, client *github.Client, page int) {
 			repo.OpenIssues = int64(*r.OpenIssuesCount)
 			repo.Language = getStr(r.Language)
 
+			opt := &github.IssueListByRepoOptions{State: "open"}
+			issues, _, err := client.Issues.ListByRepo(org.Login, *r.Name, opt)
+			if err != nil {
+				c.PanicOn(err)
+			}
+			repo.HelpWantedIssueCount = countHelpWantedIssues(issues)
+
 			c.DB.Save(&repo)
 
 		}
@@ -235,9 +244,9 @@ func importStats(repo *c.Repository, org_login string, client *github.Client) er
 			time.Sleep(4 * time.Second)
 			importStats(repo, org_login, client)
 			return nil
-		} else {
-			return err
 		}
+		return err
+
 	}
 
 	for _, s := range stats {
@@ -330,4 +339,17 @@ func importPulls(repo *c.Repository, org_login string, client *github.Client, pa
 		c.DB.Save(&pull)
 	}
 	return nil
+}
+
+func countHelpWantedIssues(issues []github.Issue) int64 {
+	var count int64
+	for _, issue := range issues {
+		for _, label := range issue.Labels {
+			if matched, _ := regexp.MatchString("help.*?wanted|want.*?help|need.*?help", strings.ToLower(*label.Name)); matched {
+				count++
+				break
+			}
+		}
+	}
+	return count
 }
