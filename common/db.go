@@ -45,7 +45,7 @@ func init() {
 		DB.AutoMigrate(RepoStat{})
 	} else {
 		DB, err = gorm.Open("postgres", os.Getenv("PG_CONN_STR"))
-		DB.LogMode(true)
+		// DB.LogMode(true)
 		DB.DB().SetMaxOpenConns(10)
 	}
 	if err != nil {
