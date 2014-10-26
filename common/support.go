@@ -13,6 +13,6 @@ func Slug(str string) string {
 
 func PanicOn(err error) {
 	if err != nil {
-		panic(err.Error())
+		panic(err)
 	}
 }

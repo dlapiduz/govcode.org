@@ -1,9 +1,10 @@
 package common
 
 import (
+	"time"
+
 	"github.com/google/go-github/github"
 	"github.com/lib/pq"
-	"time"
 )
 
 type Organization struct {
@@ -27,7 +28,7 @@ type Repository struct {
 	Stargazers  int64
 	Size        int64
 	OpenIssues  int64
-	Description string
+	Description string `sql:"type:text;"`
 	Language    string
 
 	// Stats
@@ -81,8 +82,8 @@ type User struct {
 type Pull struct {
 	Id           int64
 	RepositoryId int64
-	Title        string
-	Body         string
+	Title        string `sql:"type:text;"`
+	Body         string `sql:"type:text;"`
 	Admin        bool
 	Number       int64
 	State        string
