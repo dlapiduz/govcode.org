@@ -53,6 +53,8 @@ type Repository struct {
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
+
+	HelpWantedIssueCount int64
 }
 
 func (r Repository) TableName() string {
