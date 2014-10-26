@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"strings"
 	"sync"
 	"time"
 
@@ -52,21 +51,21 @@ func runImport() (err error) {
 			err := importStats(&r, r.OrganizationLogin, client)
 			if err != nil {
 				fmt.Println("There has been an error with stats")
-				if strings.Contains(err.Error(), "404") {
-					<-sem
-					continue
-				}
-				c.PanicOn(err)
+				fmt.Println(err)
+				<-sem
+				continue
+				// ignore the error, don't panic
+				// c.PanicOn(err)
 			}
 
 			err = importPulls(&r, r.OrganizationLogin, client, 1)
 			if err != nil {
 				fmt.Println("There has been an error with stats")
-				if strings.Contains(err.Error(), "404") {
-					<-sem
-					continue
-				}
-				c.PanicOn(err)
+				fmt.Println(err)
+				<-sem
+				continue
+				// ignore the error, don't panic
+				// c.PanicOn(err)
 			}
 
 		}
