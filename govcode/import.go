@@ -199,7 +199,6 @@ func importRepos(org *c.Organization, client *github.Client, page int) {
 	}
 
 	for _, r := range repos {
-
 		if !*r.Fork {
 			var repo c.Repository
 			c.DB.Where("name = ? and organization_id = ?", *r.Name, org.Id).First(&repo)
@@ -228,7 +227,6 @@ func importRepos(org *c.Organization, client *github.Client, page int) {
 			repo.HelpWantedIssueCount = countHelpWantedIssues(issues)
 
 			c.DB.Save(&repo)
-
 		}
 	}
 
