@@ -53,21 +53,21 @@ func runImport() (err error) {
 			err := importStats(&r, r.OrganizationLogin, client)
 			if err != nil {
 				fmt.Println("There has been an error with stats")
-				if strings.Contains(err.Error(), "404") {
-					<-sem
-					continue
-				}
-				c.PanicOn(err)
+				fmt.Println(err)
+				<-sem
+				continue
+				// ignore the error, don't panic
+				// c.PanicOn(err)
 			}
 
 			err = importPulls(&r, r.OrganizationLogin, client, 1)
 			if err != nil {
 				fmt.Println("There has been an error with stats")
-				if strings.Contains(err.Error(), "404") {
-					<-sem
-					continue
-				}
-				c.PanicOn(err)
+				fmt.Println(err)
+				<-sem
+				continue
+				// ignore the error, don't panic
+				// c.PanicOn(err)
 			}
 
 		}
@@ -308,17 +308,19 @@ func importPulls(repo *c.Repository, org_login string, client *github.Client, pa
 			pull.RepositoryId = repo.Id
 			pull.Title = *gh_pull.Title
 			pull.Body = getStr(gh_pull.Body)
-			pull.Admin = *gh_pull.User.SiteAdmin
+			if gh_pull.User != nil {
+				pull.Admin = *gh_pull.User.SiteAdmin
+				var user c.User
+				user.FromGhUser(gh_pull.User)
+
+				pull.UserId = findOrCreateUser(&user)
+			}
 			pull.Number = int64(*gh_pull.Number)
 			if gh_pull.CreatedAt != nil {
 				pull.GhCreatedAt.Time = *gh_pull.CreatedAt
 				pull.GhCreatedAt.Valid = true
 			}
 
-			var user c.User
-			user.FromGhUser(gh_pull.User)
-
-			pull.UserId = findOrCreateUser(&user)
 		}
 
 		// If the pull has not been updated go to the next one
