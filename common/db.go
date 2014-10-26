@@ -2,11 +2,12 @@ package common
 
 import (
 	"fmt"
+	"os"
+	"strings"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq"
 	_ "github.com/mattn/go-sqlite3"
-	"os"
-	"strings"
 )
 
 // Connection string parameters for Postgres - http://godoc.org/github.com/lib/pq, if you are using another
@@ -44,6 +45,8 @@ func init() {
 		DB.AutoMigrate(RepoStat{})
 	} else {
 		DB, err = gorm.Open("postgres", os.Getenv("PG_CONN_STR"))
+		DB.LogMode(true)
+		DB.DB().SetMaxOpenConns(10)
 	}
 	if err != nil {
 		panic(fmt.Sprintf("Got error when connect database, the error is '%v'", err))

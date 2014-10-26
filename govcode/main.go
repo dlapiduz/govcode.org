@@ -1,9 +1,10 @@
 package main
 
 import (
+	"os"
+
 	"github.com/codegangsta/cli"
 	c "github.com/dlapiduz/govcode.org/common"
-	"os"
 )
 
 func main() {
@@ -22,6 +23,8 @@ func main() {
 				c.DB.AutoMigrate(c.Pull{})
 				c.DB.AutoMigrate(c.CommitOrgStats{})
 				c.DB.AutoMigrate(c.RepoStat{})
+
+				c.DB.Model(c.Repository{}).AddIndex("repositories_name_orgid_idx", "name", "organization_id")
 			},
 		},
 		{
