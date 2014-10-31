@@ -118,19 +118,19 @@ func getAccounts() (orgs []string) {
 	err = json.Unmarshal(body, &data)
 	c.PanicOn(err)
 
-	orgs = append(orgs, []string{"afrl", "arcticlcc", "arm-doe", "bbginnovate",
-		"blue-button", "ca-cst-sii", "chaos", "cocomans", "commercegov", "cooperhewitt",
-		"eeoc", "energyapps", "fccdata", "federal-aviation-administration", "globegit",
+	orgs = append(orgs, []string{"arcticlcc", "bbginnovate",
+		"blue-button", "ca-cst-sii", "chaos", "cocomans", "cooperhewitt",
+		"eeoc", "federal-aviation-administration", "globegit",
 		"gopleader", "government-services", "govxteam", "greatsmokymountainsnationalpark",
-		"hhsdigitalmediaapiplatform", "hhsidealab", "imdprojects", "innovation-toolkit",
-		"ioos", "irsgov", "jbei", "kbase", "m-o-s-e-s", "measureauthoringtool", "missioncommand",
-		"nasa-gibs", "nasa-rdt", "nasajpl", "nationalguard", "ncats", "ncbitools",
+		"hhsidealab", "imdprojects",
+		"irsgov", "jbei", "kbase", "m-o-s-e-s", "measureauthoringtool",
+		"nasa-gibs", "nasa-rdt", "ncbitools",
 		"ncpp", "ncrn", "ndar", "neogeographytoolkit", "nersc", "ngageoint", "ngds",
-		"nhanes", "niem", "nist-bws", "nist-ics-sec-tb", "nmml",
-		"noaa-orr-erd", "nrel-cookbooks", "ozone-development", "petsc", "pm-master",
-		"servir", "smithsonian", "sunpy", "usbr", "usdeptveteransaffairs", "usgcrp",
-		"usgin-models", "usgs-astrogeology", "usgs-cida", "usgs-owi", "usgs-r", "usindianaffairs",
-		"usnistgov", "usps", "vhainnovations", "virtual-world-framework", "visionworkbench",
+		"nhanes", "nist-ics-sec-tb", "nmml",
+		"nrel-cookbooks", "ozone-development", "pm-master",
+		"servir", "sunpy", "usbr", "usdeptveteransaffairs", "usgcrp",
+		"usgin-models", "usgs-astrogeology", "usgs-cida", "usgs-owi", "usindianaffairs",
+		"usps", "vhainnovations", "visionworkbench",
 		"wfmrda"}...)
 
 	for _, e := range data.Accounts {
