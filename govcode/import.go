@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"regexp"
 	"strings"
 	"sync"
 	"time"
@@ -56,18 +55,22 @@ func runImport() (err error) {
 				fmt.Println(err)
 				<-sem
 				continue
-				// ignore the error, don't panic
-				// c.PanicOn(err)
 			}
 
 			err = importPulls(&r, r.OrganizationLogin, client, 1)
 			if err != nil {
-				fmt.Println("There has been an error with stats")
+				fmt.Println("There has been an error with pulls")
 				fmt.Println(err)
 				<-sem
 				continue
-				// ignore the error, don't panic
-				// c.PanicOn(err)
+			}
+
+			err = importIssues(&r, r.OrganizationLogin, client, 1)
+			if err != nil {
+				fmt.Println("There has been an error with issues")
+				fmt.Println(err)
+				<-sem
+				continue
 			}
 
 		}
@@ -219,17 +222,9 @@ func importRepos(org *c.Organization, client *github.Client, page int) {
 			repo.OpenIssues = int64(*r.OpenIssuesCount)
 			repo.Language = getStr(r.Language)
 
-			opt := &github.IssueListByRepoOptions{State: "open"}
-			issues, _, err := client.Issues.ListByRepo(org.Login, *r.Name, opt)
-			if err != nil {
-				c.PanicOn(err)
-			}
-			repo.HelpWantedIssueCount = countHelpWantedIssues(issues)
-
 			c.DB.Save(&repo)
 		}
 	}
-
 }
 
 func importStats(repo *c.Repository, org_login string, client *github.Client) error {
@@ -341,15 +336,43 @@ func importPulls(repo *c.Repository, org_login string, client *github.Client, pa
 	return nil
 }
 
-func countHelpWantedIssues(issues []github.Issue) int64 {
-	var count int64
-	for _, issue := range issues {
-		for _, label := range issue.Labels {
-			if matched, _ := regexp.MatchString("help.*?wanted|want.*?help|need.*?help", strings.ToLower(*label.Name)); matched {
-				count++
-				break
-			}
-		}
+func importIssues(repo *c.Repository, org_login string, client *github.Client, page int) error {
+	opt := &github.IssueListByRepoOptions{State: "open"}
+	opt.ListOptions = github.ListOptions{Page: page, PerPage: 100}
+
+	issues, response, err := client.Issues.ListByRepo(org_login, repo.Name, opt)
+	fmt.Printf("Getting issues for repo %s at page %d\n", repo.Name, page)
+	fmt.Println(response)
+	if err != nil {
+		return err
 	}
-	return count
+
+	// There are more pages, lets fetch the next one
+	if response.NextPage > 0 {
+		importIssues(repo, org_login, client, response.NextPage)
+	}
+
+	for _, ghIssue := range issues {
+		issue := c.Issue{Title: *ghIssue.Title, Body: getStr(ghIssue.Body), Labels: labelsToString(ghIssue.Labels)}
+		// Does the issue exist?
+		c.DB.Where("number = ? and repository_id = ?", *ghIssue.Number, repo.Id).First(&issue)
+
+		if issue.Id == 0 {
+			issue.RepositoryId = repo.Id
+			issue.Number = int64(*ghIssue.Number)
+			issue.Url = *ghIssue.HTMLURL
+		}
+
+		c.DB.Save(&issue)
+	}
+
+	return nil
+}
+
+func labelsToString(labels []github.Label) string {
+	var lbls []string
+	for _, label := range labels {
+		lbls = append(lbls, *label.Name)
+	}
+	return strings.Join(lbls, ",")
 }
