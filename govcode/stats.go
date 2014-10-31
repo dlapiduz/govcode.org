@@ -2,12 +2,20 @@ package main
 
 import (
 	"fmt"
-	c "github.com/dlapiduz/govcode.org/common"
 	"time"
+
+	c "github.com/dlapiduz/govcode.org/common"
 )
 
 func generateStats() {
-	// Commit Count per Org
+	generateCommitCount()
+	generateCommitCountPerUser()
+	updateLastCommit()
+	updateLastPull()
+	updateIssueHelpWantedCount()
+}
+
+func generateCommitCount() {
 	fmt.Println("Generating commit count per org")
 
 	rows, err := c.DB.Table("repo_stats").Select(`
@@ -29,18 +37,17 @@ func generateStats() {
 		}
 
 		c.DB.Where(stat).FirstOrInit(&stat)
-
 		stat.CommitCount = commit_count
-
 		c.DB.Save(&stat)
 	}
 
 	rows.Close()
+}
 
-	// Update users commit count and org list
+func generateCommitCountPerUser() {
 	fmt.Println("Generating commit count per user")
 
-	rows, err = c.DB.Table("repo_stats").Select(`
+	rows, err := c.DB.Table("repo_stats").Select(`
 	   user_id, array_agg(distinct o.login) as organization_list, sum(commits) as commit_count
 	 `).Joins(`
 	 	inner join repositories r
@@ -71,11 +78,12 @@ func generateStats() {
 	}
 
 	rows.Close()
+}
 
-	// Update LastCommit
+func updateLastCommit() {
 	fmt.Println("Updating LastCommit")
 
-	rows, err = c.DB.Table("repo_stats").Select(`
+	rows, err := c.DB.Table("repo_stats").Select(`
     repository_id, max(week) as week
   `).Group("repository_id").Rows()
 
@@ -97,11 +105,12 @@ func generateStats() {
 	}
 
 	rows.Close()
+}
 
-	// Update LastPull
+func updateLastPull() {
 	fmt.Println("Updating LastPull")
 
-	rows, err = c.DB.Table("pulls").Select(`
+	rows, err := c.DB.Table("pulls").Select(`
 	   repository_id, max(gh_created_at) as latest_pull
 	 `).Group("repository_id").Rows()
 
@@ -125,4 +134,24 @@ func generateStats() {
 	}
 
 	rows.Close()
+}
+
+func updateIssueHelpWantedCount() {
+	fmt.Println("Updating Issue Help Wanted Count")
+
+	var repos []c.Repository
+	c.DB.Find(&repos)
+	fmt.Println(len(repos))
+	for _, repo := range repos {
+		var issues []c.Issue
+		c.DB.Where("repository_id=?", repo.Id).Find(&issues)
+		var count int64
+		for _, issue := range issues {
+			if issue.HelpWanted() {
+				count++
+			}
+		}
+		repo.HelpWantedIssueCount = count
+		c.DB.Save(&repo)
+	}
 }
