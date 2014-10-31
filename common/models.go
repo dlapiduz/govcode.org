@@ -41,9 +41,9 @@ type Repository struct {
 	OrganizationId int64
 
 	// Accessor Fields
-	OrganizationLogin string `sql:-`
-	DaysSincePull     int64  `sql:-`
-	DaysSinceCommit   int64  `sql:-`
+	OrganizationLogin string `sql:"-"`
+	DaysSincePull     int64  `sql:"-"`
+	DaysSinceCommit   int64  `sql:"-"`
 
 	// Related fields
 	Commits      []Commit
