@@ -1,6 +1,8 @@
 package common
 
 import (
+	"regexp"
+	"strings"
 	"time"
 
 	"github.com/google/go-github/github"
@@ -53,6 +55,8 @@ type Repository struct {
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
+
+	HelpWantedIssueCount int64
 }
 
 func (r Repository) TableName() string {
@@ -96,6 +100,16 @@ type Pull struct {
 	CreatedAt time.Time
 }
 
+type Issue struct {
+	Id           int64
+	RepositoryId int64
+	Number       int64
+	Title        string `sql:"type:text;"`
+	Body         string `sql:"type:text;"`
+	Url          string
+	Labels       string `sql:"type:text;"`
+}
+
 type RepoStat struct {
 	Id           int64
 	RepositoryId int64
@@ -136,4 +150,14 @@ func (u *User) FromGhContrib(gh_contrib *github.Contributor) {
 	u.Login = *gh_contrib.Login
 	u.GhId = int64(*gh_contrib.ID)
 	u.AvatarUrl = *gh_contrib.AvatarURL
+}
+
+func (i *Issue) HelpWanted() bool {
+	labels := strings.Split(i.Labels, ",")
+	for _, label := range labels {
+		if matched, _ := regexp.MatchString("(?i)help.*?wanted|want.*?help|need.*?help", label); matched {
+			return true
+		}
+	}
+	return false
 }
