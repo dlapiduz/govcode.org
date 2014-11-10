@@ -25,6 +25,8 @@
                         <i class="fa fa-exclamation-circle"></i>
                         {{ issue.title }}
                     </a>
+
+                    <span ng-if="issue.help_wanted" class="fa fa-bug"> help wanted</span>
                 </li>
                 <li ng-show="viewMoreActivities">
                     <a ng-href="https://github.com/{{ repo.Organization.Login }}/{{ repo.Name }}/issues" target="_BLANK">
@@ -58,6 +60,10 @@
                     {{ repo.Watchers }}
                     <i class="fa fa-star"></i> 
                     {{ repo.Stargazers }}
+                    <i class="fa fa-exclamation-circle"></i>
+                    {{ repo.OpenIssues }}
+                    <i class="fa fa-bug"></i>
+                    {{ repo.HelpWantedIssueCount }}
                 </h4>
             </div>
 

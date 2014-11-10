@@ -17,11 +17,12 @@ build:
           go test ./...
           go build ./...
     - script:
-        name: run suite for govcode
-        cwd: govcode/
+        name: run suite for common
+        cwd: common/
         code: |
           go get -t ./...
           go vet
+          go test
           go build ./...
     - script:
         name: Store cache
