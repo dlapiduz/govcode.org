@@ -108,6 +108,7 @@ type Issue struct {
 	Body         string `sql:"type:text;"`
 	Url          string
 	Labels       string `sql:"type:text;"`
+	State        string
 }
 
 type RepoStat struct {
