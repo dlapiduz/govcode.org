@@ -144,7 +144,7 @@ func updateIssueHelpWantedCount() {
 	fmt.Println(len(repos))
 	for _, repo := range repos {
 		var issues []c.Issue
-		c.DB.Where("repository_id=?", repo.Id).Find(&issues)
+		c.DB.Where("repository_id=? and state = 'open'", repo.Id).Find(&issues)
 		var count int64
 		for _, issue := range issues {
 			if issue.HelpWanted() {

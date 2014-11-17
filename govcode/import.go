@@ -337,7 +337,7 @@ func importPulls(repo *c.Repository, org_login string, client *github.Client, pa
 }
 
 func importIssues(repo *c.Repository, org_login string, client *github.Client, page int) error {
-	opt := &github.IssueListByRepoOptions{State: "open"}
+	opt := &github.IssueListByRepoOptions{State: "all"}
 	opt.ListOptions = github.ListOptions{Page: page, PerPage: 100}
 
 	issues, response, err := client.Issues.ListByRepo(org_login, repo.Name, opt)
@@ -362,6 +362,8 @@ func importIssues(repo *c.Repository, org_login string, client *github.Client, p
 			issue.Number = int64(*ghIssue.Number)
 			issue.Url = *ghIssue.HTMLURL
 		}
+
+		issue.State = *ghIssue.State
 
 		c.DB.Save(&issue)
 	}
