@@ -41,6 +41,7 @@ func init() {
 		DB.AutoMigrate(Commit{})
 		DB.AutoMigrate(User{})
 		DB.AutoMigrate(Pull{})
+		DB.AutoMigrate(Issue{})
 		DB.AutoMigrate(CommitOrgStats{})
 		DB.AutoMigrate(RepoStat{})
 	} else {

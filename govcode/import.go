@@ -41,41 +41,43 @@ func runImport() (err error) {
 	rows = rows.Order("updated_at")
 	rows.Scan(&repos)
 
+	quit := make(chan bool)
+
 	for _, r := range repos {
 		sem <- true
-		if r.OrganizationLogin == "" {
+		select {
+		case <-quit:
+			fmt.Println("Exiting!")
 			<-sem
-			continue
+			return
+		default:
+			go func(repo c.Repository) {
+				if repo.OrganizationLogin == "" {
+					<-sem
+					return
+				}
+
+				if !repo.Ignore {
+					if err := importStats(&repo, repo.OrganizationLogin, client); err != nil {
+						handleErr(err, "stats", &sem, &quit)
+						return
+					}
+
+					if err := importPulls(&repo, repo.OrganizationLogin, client, 1); err != nil {
+						handleErr(err, "pulls", &sem, &quit)
+						return
+					}
+
+					if err := importIssues(&repo, repo.OrganizationLogin, client, 1); err != nil {
+						handleErr(err, "issues", &sem, &quit)
+						return
+					}
+
+				}
+				c.DB.Save(repo)
+				<-sem
+			}(r)
 		}
-
-		if !r.Ignore {
-			err := importStats(&r, r.OrganizationLogin, client)
-			if err != nil {
-				fmt.Println("There has been an error with stats")
-				fmt.Println(err)
-				<-sem
-				continue
-			}
-
-			err = importPulls(&r, r.OrganizationLogin, client, 1)
-			if err != nil {
-				fmt.Println("There has been an error with pulls")
-				fmt.Println(err)
-				<-sem
-				continue
-			}
-
-			err = importIssues(&r, r.OrganizationLogin, client, 1)
-			if err != nil {
-				fmt.Println("There has been an error with issues")
-				fmt.Println(err)
-				<-sem
-				continue
-			}
-
-		}
-		c.DB.Save(&r)
-		<-sem
 	}
 
 	for i := 0; i < cap(sem); i++ {
@@ -83,6 +85,24 @@ func runImport() (err error) {
 	}
 
 	return nil
+}
+
+func handleErr(err error, section string, sem *chan bool, stopChan *chan bool) {
+	fmt.Println("There has been an error with", section)
+	fmt.Println(err)
+
+	switch v := err.(type) {
+	case *github.ErrorResponse:
+		if v.Response != nil && v.Response.StatusCode == 403 {
+			fmt.Println("No more requests")
+		}
+		<-*sem
+		*stopChan <- true
+		return
+	default:
+		<-*sem
+		return
+	}
 }
 
 func getStr(str *string) string {
@@ -238,8 +258,6 @@ func importStats(repo *c.Repository, org_login string, client *github.Client) er
 			importStats(repo, org_login, client)
 			return nil
 		}
-		return err
-
 	}
 
 	for _, s := range stats {
