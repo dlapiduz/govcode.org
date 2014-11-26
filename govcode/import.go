@@ -144,13 +144,13 @@ func getAccounts() (orgs []string) {
 	c.PanicOn(err)
 
 	orgs = append(orgs, []string{"arcticlcc", "bbginnovate",
-		"blue-button", "ca-cst-sii", "chaos", "cocomans", "cooperhewitt",
+		"blue-button", "ca-cst-sii", "cocomans", "cooperhewitt",
 		"eeoc", "federal-aviation-administration", "globegit",
-		"gopleader", "government-services", "govxteam", "greatsmokymountainsnationalpark",
-		"hhsidealab", "imdprojects",
+		"gopleader", "govxteam", "greatsmokymountainsnationalpark",
+		"imdprojects",
 		"irsgov", "jbei", "kbase", "m-o-s-e-s", "measureauthoringtool",
 		"nasa-gibs", "nasa-rdt", "ncbitools",
-		"ncpp", "ncrn", "ndar", "neogeographytoolkit", "nersc", "ngageoint", "ngds",
+		"ncpp", "ncrn", "ndar", "neogeographytoolkit", "nersc", "ngds",
 		"nhanes", "nist-ics-sec-tb", "nmml",
 		"nrel-cookbooks", "ozone-development", "pm-master",
 		"servir", "sunpy", "usbr", "usdeptveteransaffairs", "usgcrp",
