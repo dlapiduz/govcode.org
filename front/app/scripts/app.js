@@ -14,7 +14,7 @@ angular
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'truncate', 
+    'truncate',
     'ui.unique',
     'angular-table',
     'chartjs',
@@ -70,11 +70,13 @@ angular
         }
 
         // Filter by lastActivity
-        if (options.lastActivity < 12 && 
-            options.lastActivity > 0 && 
-            ( items[i].DaysSinceCommit > options.lastActivity * 30 || 
-              items[i].DaysSinceCommit == 0)
-            ) {
+        if (options.lastActivity < 12 &&
+            options.lastActivity > 0 &&
+            ( items[i].DaysSinceCommit > options.lastActivity * 30 ||
+              items[i].DaysSinceCommit == 0) ||
+            ( items[i].DaysSinceCommit < 0 && options.lastActivity < 12)
+            )
+             {
           continue;
         }
 
