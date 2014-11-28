@@ -159,7 +159,16 @@ func getAccounts() (orgs []string) {
 		"wfmrda"}...)
 
 	for _, e := range data.Accounts {
-		orgs = append(orgs, e.Account)
+		found := false
+		for _, o := range orgs {
+			if o == e.Account {
+				found = true
+				break
+			}
+		}
+		if !found {
+			orgs = append(orgs, e.Account)
+		}
 	}
 
 	return orgs
