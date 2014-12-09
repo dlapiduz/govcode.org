@@ -10,6 +10,7 @@
     <!-- build:css styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/fontawesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="bower_components/jqcloud2/dist/jqcloud.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
@@ -25,11 +26,12 @@
     <!-- Add your site or application content here -->
     <div class="container-fluid" ng-controller="MainCtrl">
         <header>
-            <h1><a href="/">Govcode</a></h1>
-            <h2><a href="/">Government Open Source Projects</a></h2>
+            <h2><a href="/">Govcode</a></h2>
+            <h3><a href="/">Government Open Source Projects</a></h3>
             <nav>
                 <ul>
                     <li><a href="#/" ng-class="getClass('/')"><i class="fa fa-home"></i></a></li>
+                    <li><a href="#/repos"  ng-class="getClass('/repos')">Projects</a></li>
                     <li><a href="#/contributors"  ng-class="getClass('/contributors')">Contributors</a></li>
                     <li><a href="#/stats" ng-class="getClass('/stats')">Stats</a></li>
                     <li><a href="#/about" ng-class="getClass('/about')">About</a></li>
@@ -93,6 +95,7 @@
     <script src="bower_components/angular-moment/angular-moment.js"></script>
     <script src="bower_components/jquery-waypoints/waypoints.js"></script>
     <script src="bower_components/angulartics/src/angulartics.js"></script>
+    <script src="bower_components/angulartics/src/angulartics-ga.js"></script>
     <!-- endbower -->
     <script src="/bower_components/angular-ui-utils/ui-utils-ieshiv.js"></script>
     <script src="/bower_components/at-table/dist/angular-table.js"></script>
@@ -101,6 +104,7 @@
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <script src="/scripts/app.js"></script>
     <script src="/scripts/controllers/main.js"></script>
+    <script src="/scripts/controllers/home.js"></script>
     <script src="/scripts/controllers/repos.js"></script>
     <script src="/scripts/controllers/repo.js"></script>
     <script src="/scripts/controllers/contrib.js"></script>

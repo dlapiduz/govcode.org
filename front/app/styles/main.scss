@@ -18,7 +18,7 @@ body {
     padding: 0;
 }
 
-h1 {
+header h2 {
     font-size: 42px;
     float: left;
     padding: 0;
@@ -36,7 +36,7 @@ h1 {
     }
 }
 
-h2 {
+header h3 {
     font-size: 20px;
     color: #DDD;
     padding: 0;
@@ -53,8 +53,6 @@ header {
     width: 100%;
     padding: 40px 0 30px 10px;
     background: #333;
-    margin-bottom: 20px;
-
 }
 
 .card {
@@ -344,5 +342,43 @@ nav ul li a.current, nav ul li a:hover {
 
 .footer {
   text-align: center;
-  padding: 20px 0;
+  padding: 60px 0;
+}
+
+.home {
+  text-align: center;
+  padding: 0;
+  margin: 0;
+
+  h1 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-weight: 300;
+    font-size: 45px;
+  }
+
+  h3 {
+    font-weight: 300;
+  }
+
+  .banner {
+    background-color: #428BCA;
+    padding: 60px;
+    color: #fff;
+  }
+  .stats {
+    margin-top: 40px;
+    .stat {
+      span {
+        color: #428BCA;
+        font-size: 50px;
+      }
+    }
+  }
+  .filters {
+    -webkit-box-shadow:inset 0 0 5px 0 #CCC;
+    box-shadow:inset 0 0 5px 0 #CCC;
+    min-height: 50px;
+    margin-top: 50px;
+  }
 }

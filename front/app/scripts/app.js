@@ -19,7 +19,9 @@ angular
     'angular-table',
     'chartjs',
     'angularMoment',
-    'angulartics', 'angulartics.google.analytics'
+    'angulartics',
+    'angulartics.google.analytics',
+    'angular-jqcloud'
   ])
   .config(['$routeProvider',
            '$locationProvider',
@@ -28,6 +30,10 @@ angular
     $locationProvider.html5Mode(true);
     $routeProvider
       .when('/', {
+        templateUrl: '/views/home.html',
+        controller: 'HomeCtrl'
+      })
+      .when('/repos', {
         templateUrl: '/views/repos.html',
         controller: 'ReposCtrl'
       })

@@ -17,7 +17,8 @@
     "angular-ui-utils": "~0.1.1",
     "ng-chartjs": "*",
     "angular-moment": "~0.7.1",
-    "angulartics": "~0.15.20"
+    "angulartics": "~0.15.20",
+    "angular-jqcloud": "~1.0.0"
   },
   "devDependencies": {
     "angular-mocks": "1.2.16",
