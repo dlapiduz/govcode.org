@@ -1,6 +1,7 @@
 package main
 
 import (
+	"net/http"
 	"time"
 
 	c "github.com/dlapiduz/govcode.org/common"
@@ -28,6 +29,8 @@ func App() *martini.ClassicMartini {
 		AllowAllOrigins: true,
 	}))
 
+	m.Get("", Index)
+
 	m.Group("/repos", func(r martini.Router) {
 		r.Get("", ReposIndex)
 		r.Get("/:name", ReposShow)
@@ -44,8 +47,25 @@ func App() *martini.ClassicMartini {
 	})
 
 	m.Get("/stats", StatsIndex)
+	m.Get("/issues", IssuesIndex)
 
 	return m
+}
+
+func Index(r render.Render) {
+	type homeStats struct {
+		RepoCount  int
+		IssueCount int
+		UserCount  int
+	}
+
+	stats := homeStats{}
+
+	c.DB.Model(c.Repository{}).Count(&stats.RepoCount)
+	c.DB.Model(c.Issue{}).Count(&stats.IssueCount)
+	c.DB.Model(c.User{}).Count(&stats.UserCount)
+
+	r.JSON(200, stats)
 }
 
 func ReposIndex(r render.Render) {
@@ -125,7 +145,7 @@ func StatsIndex(r render.Render) {
 		Commits           int64
 	}
 	var org_stats []orgStat
-	rows = c.DB.Debug().Table("repo_stats")
+	rows = c.DB.Table("repo_stats")
 	rows = rows.Select(`organizations.login as organization_login,
 		min(repo_stats.week) as week,
 		TO_CHAR(repo_stats.week, 'Mon YYYY') as month,
@@ -148,4 +168,68 @@ func StatsIndex(r render.Render) {
 	result["org_stats"] = org_stats
 
 	r.JSON(200, result)
+}
+
+func IssuesIndex(r render.Render, req *http.Request) {
+	qs := req.URL.Query()
+
+	opts := struct {
+		perPage  int
+		page     int
+		repoId   int
+		orgId    int
+		language string
+		state    string
+		label    string
+	}{
+		ForceStoInt(qs.Get("perPage")),
+		ForceStoInt(qs.Get("page")),
+		ForceStoInt(qs.Get("repoId")),
+		ForceStoInt(qs.Get("orgId")),
+		qs.Get("language"),
+		qs.Get("state"),
+		qs.Get("label"),
+	}
+
+	var issues []c.Issue
+	rows := c.DB.Table("issues").Select("issues.*")
+	rows = rows.Joins(`inner join repositories on repositories.id = issues.repository_id
+		inner join organizations on organizations.id = repositories.organization_id
+	`)
+
+	if opts.repoId > 0 {
+		rows = rows.Where("repositories.id = ?", opts.repoId)
+	}
+	if opts.orgId > 0 {
+		rows = rows.Where("organizations.id = ?", opts.orgId)
+	}
+	if opts.language != "" {
+		rows = rows.Where("repositories.language = ?", opts.language)
+	}
+	if opts.label != "" {
+		label := "%" + opts.label + "%"
+		rows = rows.Where("issues.labels LIKE ?", label)
+	}
+
+	if opts.state == "all" || opts.state == "closed" {
+		rows = rows.Where("issues.state = ?", opts.state)
+	} else {
+		rows = rows.Where("issues.state = ?", "open")
+	}
+
+	if opts.perPage == 0 || opts.perPage > 100 {
+		opts.perPage = 100
+	}
+
+	rows = rows.Limit(opts.perPage)
+
+	if opts.page > 0 {
+		rows = rows.Offset(opts.page * opts.perPage)
+	}
+
+	rows = rows.Order("issues.gh_updated_at desc")
+
+	rows.Scan(&issues)
+
+	r.JSON(200, issues)
 }
