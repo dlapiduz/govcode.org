@@ -109,6 +109,12 @@ type Issue struct {
 	Url          string
 	Labels       string `sql:"type:text;"`
 	State        string
+
+	GhCreatedAt pq.NullTime
+	GhUpdatedAt pq.NullTime
+	GhClosedAt  pq.NullTime
+
+	CreatedAt time.Time
 }
 
 type RepoStat struct {

@@ -390,6 +390,12 @@ func importIssues(repo *c.Repository, org_login string, client *github.Client, p
 			issue.Url = *ghIssue.HTMLURL
 		}
 
+		issue.GhCreatedAt.Scan(*ghIssue.CreatedAt)
+		issue.GhUpdatedAt.Scan(*ghIssue.UpdatedAt)
+		if ghIssue.ClosedAt != nil {
+			issue.GhClosedAt.Scan(*ghIssue.ClosedAt)
+		}
+
 		issue.State = *ghIssue.State
 
 		c.DB.Save(&issue)
