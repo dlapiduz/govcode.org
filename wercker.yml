@@ -24,11 +24,31 @@ build:
           go vet
           go build ./...
     - script:
+        name: move deploy assets to deploy folder
+        code: |
+          cp govcode/govcode $WERCKER_OUTPUT_DIR
+          cp govcoded/govcoded $WERCKER_OUTPUT_DIR
+    - script:
         name: Store cache
         code: |
             rsync -avzv --exclude "$WERCKER_SOURCE_DIR" "$GOPATH/" "$WERCKER_CACHE_DIR/go-pkg-cache/"
 deploy:
   steps:
+    - script:
+        name: Configure git
+        code: |-
+          git config --global user.email "pleasemailus@wercker.com"
+          git config --global user.name "wercker"
+          rm -rf .git
+    - script:
+        name: Deploy assets to deploy branch
+        code: |-
+          git init
+          git add .
+          git commit -m "deploy commit from $WERCKER_STARTED_BY [ci skip]"
+          git push -f $GIT_REMOTE master:deploy
     - dlapiduz/github-create-deployment:
         token: $GITHUB_TOKEN
         environment: $GITHUB_DEPLOY_ENV
+        ref: deploy
+        auto_merge: false
