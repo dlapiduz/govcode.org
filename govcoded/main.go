@@ -57,6 +57,7 @@ func Index(r render.Render) {
 		RepoCount  int
 		IssueCount int
 		UserCount  int
+		IssueLangs []string
 	}
 
 	stats := homeStats{}
@@ -65,10 +66,22 @@ func Index(r render.Render) {
 	c.DB.Model(c.Issue{}).Count(&stats.IssueCount)
 	c.DB.Model(c.User{}).Count(&stats.UserCount)
 
+	rows := c.DB.Raw(`select distinct language
+		from issues
+		inner join repositories on repositories.id = issues.repository_id
+		where language != ''
+		order by language
+	`)
+
+	rows.Pluck("language", &stats.IssueLangs)
+
 	r.JSON(200, stats)
 }
 
-func ReposIndex(r render.Render) {
+func ReposIndex(r render.Render, req *http.Request) {
+	qs := req.URL.Query()
+	perPage := ForceStoInt(qs.Get("perPage"))
+
 	var results []c.Repository
 	rows := c.DB.Table("repositories")
 	rows = rows.Select(`repositories.*, organizations.login as organization_login,
@@ -76,6 +89,9 @@ func ReposIndex(r render.Render) {
 		coalesce(date_part('day', now() - last_commit), -1) as days_since_commit
 		`)
 	rows = rows.Joins("inner join organizations on organizations.id = repositories.organization_id")
+	if perPage > 0 {
+		rows = rows.Limit(perPage)
+	}
 	rows.Scan(&results)
 
 	r.JSON(200, results)
@@ -192,7 +208,11 @@ func IssuesIndex(r render.Render, req *http.Request) {
 	}
 
 	var issues []c.Issue
-	rows := c.DB.Table("issues").Select("issues.*")
+	rows := c.DB.Table("issues").Select(`issues.*, 
+		organizations.login as organization_login,
+		repositories.language as language,
+		repositories.name as repository_name
+	`)
 	rows = rows.Joins(`inner join repositories on repositories.id = issues.repository_id
 		inner join organizations on organizations.id = repositories.organization_id
 	`)

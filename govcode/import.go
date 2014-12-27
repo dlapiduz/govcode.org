@@ -243,6 +243,7 @@ func importRepos(org *c.Organization, client *github.Client, page int) {
 				}
 				repo.OrganizationId = org.Id
 				repo.Ignore = false
+				repo.GhCreatedAt.Scan(*r.CreatedAt)
 			}
 			repo.Forks = int64(*r.ForksCount)
 			repo.Watchers = int64(*r.WatchersCount)
@@ -250,6 +251,7 @@ func importRepos(org *c.Organization, client *github.Client, page int) {
 			repo.Size = int64(*r.Size)
 			repo.OpenIssues = int64(*r.OpenIssuesCount)
 			repo.Language = getStr(r.Language)
+			repo.GhUpdatedAt.Scan(*r.CreatedAt)
 
 			c.DB.Save(&repo)
 		}

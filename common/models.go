@@ -41,9 +41,9 @@ type Repository struct {
 	OrganizationId int64
 
 	// Accessor Fields
-	OrganizationLogin string `sql:-`
-	DaysSincePull     int64  `sql:-`
-	DaysSinceCommit   int64  `sql:-`
+	OrganizationLogin string `sql:"-"`
+	DaysSincePull     int64  `sql:"-"`
+	DaysSinceCommit   int64  `sql:"-"`
 
 	// Related fields
 	Commits      []Commit
@@ -52,6 +52,9 @@ type Repository struct {
 	RepoStat     []RepoStat
 
 	Ignore bool
+
+	GhCreatedAt pq.NullTime
+	GhUpdatedAt pq.NullTime
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -110,6 +113,11 @@ type Issue struct {
 	Labels       string `sql:"type:text;"`
 	State        string
 
+	// Accessor Fields
+	OrganizationLogin string `sql:"-"`
+	Language          string `sql:"-"`
+	RepositoryName    string `sql:"-"`
+
 	GhCreatedAt pq.NullTime
 	GhUpdatedAt pq.NullTime
 	GhClosedAt  pq.NullTime
@@ -148,15 +156,19 @@ type CommitOrgStats struct {
 }
 
 func (u *User) FromGhUser(gh_user *github.User) {
-	u.Login = *gh_user.Login
-	u.GhId = int64(*gh_user.ID)
-	u.AvatarUrl = *gh_user.AvatarURL
+	if gh_user != nil {
+		u.Login = *gh_user.Login
+		u.GhId = int64(*gh_user.ID)
+		u.AvatarUrl = *gh_user.AvatarURL
+	}
 }
 
 func (u *User) FromGhContrib(gh_contrib *github.Contributor) {
-	u.Login = *gh_contrib.Login
-	u.GhId = int64(*gh_contrib.ID)
-	u.AvatarUrl = *gh_contrib.AvatarURL
+	if gh_contrib != nil {
+		u.Login = *gh_contrib.Login
+		u.GhId = int64(*gh_contrib.ID)
+		u.AvatarUrl = *gh_contrib.AvatarURL
+	}
 }
 
 func (i *Issue) HelpWanted() bool {
