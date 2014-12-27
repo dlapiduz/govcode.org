@@ -20,8 +20,7 @@ angular
     'chartjs',
     'angularMoment',
     'angulartics',
-    'angulartics.google.analytics',
-    'angular-jqcloud'
+    'angulartics.google.analytics'
   ])
   .config(['$routeProvider',
            '$locationProvider',
@@ -53,12 +52,16 @@ angular
         templateUrl: '/views/about.html',
         controller: 'AboutCtrl'
       })
+      .when('/issues', {
+        templateUrl: '/views/issues.html',
+        controller: 'IssuesCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
   }])
   .run(['$rootScope', function($rootScope) {
-    $rootScope.apiUrl = "https://api.govcode.org";
+    $rootScope.apiUrl = "http://localhost:3000";
   }])
   .filter('multifilter', function() {
     return function(items, options) {

@@ -1,0 +1,69 @@
+<div class="col-md-8 col-md-offset-2 issues">
+
+  <h2>Issues</h2>
+  <p>
+    Multiple projects work in the open and use Github's issue tracking system
+    to collaborate on tasks, bugs and chores. <br />
+    If you want to help a project you can grab an issue and submit a Pull Request
+    to the project.
+  </p>
+
+  <h3>Latest Help Wanted Issues</h3>
+
+  <table at-table at-config="config" at-list="helpWantedIssues" at-paginated class="table">
+    <thead></thead>
+    <tbody>
+      <tr>
+          <td at-attribute="Title">
+            <a href="https://github.com/{{item.OrganizationLogin}}/{{item.RepositoryName}}/issues/{{item.Number}}">
+              {{ item.Title | characters:60 }}
+            </a>
+          </td>
+          <td at-attribute="RepositoryName" at-title="Repository">
+            <a ng-href="/repos/{{ item.RepositoryName }}">
+              {{ item.OrganizationLogin }}/{{ item.RepositoryName }}
+            </a>
+          </td>
+
+          <td at-attribute="Language" at-implicit></td>
+          <td>
+            <a href="https://github.com/{{item.OrganizationLogin}}/{{item.RepositoryName}}/issues/{{item.Number}}">
+              Read more
+            </a>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+  <at-pagination at-config="config" at-list="helpWantedIssues"></at-pagination>
+
+  <h3>More Issues</h3>
+
+  <table at-table at-config="config" at-list="otherIssues" at-paginated class="table">
+    <thead></thead>
+    <tbody>
+      <tr>
+          <td at-attribute="Title">
+            <a href="https://github.com/{{item.OrganizationLogin}}/{{item.RepositoryName}}/issues/{{item.Number}}">
+              {{ item.Title | characters:60 }}
+            </a>
+          </td>
+          <td at-attribute="RepositoryName" at-title="Repository">
+            <a ng-href="/repos/{{ item.RepositoryName }}">
+              {{item.OrganizationLogin }}/{{ item.RepositoryName}}
+            </a>
+          </td>
+
+          <td at-attribute="Language" at-implicit></td>
+          <td>
+            <a href="https://github.com/{{item.OrganizationLogin}}/{{item.RepositoryName}}/issues/{{item.Number}}">
+              Read more
+            </a>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+  <at-pagination at-config="config" at-list="otherIssues"></at-pagination>
+
+
+
+</div>

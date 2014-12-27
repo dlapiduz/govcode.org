@@ -2,29 +2,28 @@
 
   <div class="banner">
     <h1>
-        Contribute to the United States!
+        Help the United States!
     </h1>
 
     <h3>
       We believe in a goverment for the hackers of the hacker and <b>by the hackers</b>.
     </h3>
   </div>
+
   <div class="row-fluid">
-
-
     <div class="stats col-md-6 col-md-offset-3">
       <div class="row-fluid">
 
         <div class="stat col-xs-4">
-          <span>1998</span>
+          <span>{{ home_stats.UserCount }}</span>
           <p>Contributors</p>
         </div>
         <div class="stat col-xs-4">
-          <span>2008</span>
+          <span>{{ home_stats.RepoCount }}</span>
           <p>Projects</p>
         </div>
         <div class="stat col-xs-4">
-          <span>34000</span>
+          <span>{{ home_stats.IssueCount }}</span>
           <p>Issues</p>
         </div>
 
@@ -32,10 +31,93 @@
     </div>
   </div>
 
-  <div class="row-fluid">
-    <div class="filters col-md-12">
-      <jqcloud words="langs" width="500" height="350" steps="7"></jqcloud>
+  <div style="clear:both;">&nbsp;</div>
+
+  <div class="langs">
+    <h3>Select the languages you know to see where <b>you</b> can help!</h3>
+
+    <div class="selector">
+      <span class="opt" ng-repeat="lang in home_stats.IssueLangs" ng-click="selLang($event)" rel="{{ lang }}">
+        {{ lang }}
+      </span>
     </div>
+
+    <input type="button" class="selector-button" value="See Issues" ng-click="seeIssues()" />
+  </div>
+
+  <div style="clear:both;">&nbsp;</div>
+
+  <div class="row-fluid latest">
+    <div class="col-xs-4">
+      <h5>Latest Projects</h5>
+      <div class="latest-repos card" ng-repeat="repo in latestRepos">
+        <div class="card-head">
+          <span class="{{ mapLang(repo.Language) }}">&nbsp;</span>
+          <h3><a ng-href="/repos/{{ repo.Name }}">{{ repo.OrganizationLogin }}/{{ repo.Name }}</a></h3>
+        </div>
+        <p>
+            {{ repo.Description | characters:60: false }}
+            <span ng-show="!repo.Description">No Description</span>
+        </p>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <h5>Latest Issues</h5>
+      <div class="latest-issues card issue" ng-repeat="issue in latestIssues">
+        <p>
+          <a href="https://github.com/{{issue.OrganizationLogin}}/{{issue.RepositoryName}}/issues/{{issue.Number}}">
+            {{ issue.Title | characters:80: false }}
+          </a>
+        </p>
+        <div class="card-foot">
+          <h3>
+            <a ng-href="/repos/{{ issue.RepositoryName }}">
+              {{ issue.OrganizationLogin }} / {{ issue.RepositoryName }}
+            </a>
+          </h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <h5>Help Wanted Issues</h5>
+      <div class="help-wanted-issues card issue" ng-repeat="issue in helpWantedIssues">
+        <p>
+          <a href="https://github.com/{{issue.OrganizationLogin}}/{{issue.RepositoryName}}/issues/{{issue.Number}}">
+            {{ issue.Title | characters:80: false }}
+          </a>
+        </p>
+        <div class="card-foot">
+          <h3>
+            <a ng-href="/repos/{{ issue.RepositoryName }}">
+              {{ issue.OrganizationLogin }} / {{ issue.RepositoryName }}
+            </a>
+          </h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="clear:both;">&nbsp;</div>
+
+  <div class="news">
+    <!-- Begin MailChimp Signup Form -->
+    <div id="mc_embed_signup">
+      <form action="//sinaistudio.us1.list-manage.com/subscribe/post?u=5492b60ca327b6f2e512f020a&amp;id=ed3a5ec867" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+        <div id="mc_embed_signup_scroll">
+          <div class="mc-field-group">
+            <label for="mce-EMAIL">Sign up to receive project updates</label>
+            <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL" placeholder="Email">
+            <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button">
+          </div>
+          <div id="mce-responses" class="clear">
+            <div class="response" id="mce-error-response" style="display:none"></div>
+            <div class="response" id="mce-success-response" style="display:none"></div>
+          </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+          <div style="position: absolute; left: -5000px;"><input type="text" name="b_5492b60ca327b6f2e512f020a_ed3a5ec867" tabindex="-1" value=""></div>
+        </div>
+      </form>
+    </div>
+    <!--End mc_embed_signup-->
   </div>
 
 </div>
