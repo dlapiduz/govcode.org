@@ -12,6 +12,7 @@ build:
         name: run suite for govcoded
         cwd: govcoded/
         code: |
+          rm -f govcoded
           go get -t ./...
           go vet
           go test ./...
@@ -20,6 +21,7 @@ build:
         name: run suite for govcode
         cwd: govcode/
         code: |
+          rm -f govcode
           go get -t ./...
           go vet
           go build ./...
@@ -28,6 +30,7 @@ build:
         code: |
           cp govcode/govcode $WERCKER_OUTPUT_DIR
           cp govcoded/govcoded $WERCKER_OUTPUT_DIR
+          echo "Deployment files for: $WERCKER_GIT_COMMIT" > $WERCKER_OUTPUT_DIR/README.md
     - script:
         name: Store cache
         code: |
