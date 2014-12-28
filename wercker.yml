@@ -7,7 +7,7 @@ build:
     - script:
         name: Populate cache
         code: |
-            if test -d "$WERCKER_CACHE_DIR/go-pkg-cache"; then rsync -avzv --exclude "$WERCKER_SOURCE_DIR" "$WERCKER_CACHE_DIR/go-pkg-cache/" "$GOPATH/" ; fi
+            if test -d "$WERCKER_CACHE_DIR/go-pkg-cache"; then rsync -avzv --exclude "src/github.com/$WERCKER_GIT_OWNER" --exclude "pkg/linux_amd64/github.com/$WERCKER_GIT_OWNER" "$WERCKER_CACHE_DIR/go-pkg-cache/" "$GOPATH/" ; fi
     - script:
         name: run suite for govcoded
         cwd: govcoded/
@@ -34,7 +34,7 @@ build:
     - script:
         name: Store cache
         code: |
-            rsync -avzv --exclude "$WERCKER_SOURCE_DIR" "$GOPATH/" "$WERCKER_CACHE_DIR/go-pkg-cache/"
+            rsync -avzv --exclude "src/github.com/$WERCKER_GIT_OWNER" --exclude "pkg/linux_amd64/github.com/$WERCKER_GIT_OWNER" "$GOPATH/" "$WERCKER_CACHE_DIR/go-pkg-cache/"
 deploy:
   steps:
     - script:
@@ -55,3 +55,4 @@ deploy:
         environment: $GITHUB_DEPLOY_ENV
         ref: deploy
         auto_merge: false
+
