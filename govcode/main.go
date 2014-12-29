@@ -16,14 +16,14 @@ func main() {
 			Name:  "migrate",
 			Usage: "run database migrations",
 			Action: func(context *cli.Context) {
-				c.DB.AutoMigrate(c.Organization{})
-				c.DB.AutoMigrate(c.Repository{})
-				c.DB.AutoMigrate(c.Commit{})
-				c.DB.AutoMigrate(c.User{})
-				c.DB.AutoMigrate(c.Pull{})
-				c.DB.AutoMigrate(c.Issue{})
-				c.DB.AutoMigrate(c.CommitOrgStats{})
-				c.DB.AutoMigrate(c.RepoStat{})
+				c.DB.AutoMigrate(&c.Organization{})
+				c.DB.AutoMigrate(&c.Repository{})
+				c.DB.AutoMigrate(&c.Commit{})
+				c.DB.AutoMigrate(&c.User{})
+				c.DB.AutoMigrate(&c.Pull{})
+				c.DB.AutoMigrate(&c.Issue{})
+				c.DB.AutoMigrate(&c.CommitOrgStats{})
+				c.DB.AutoMigrate(&c.RepoStat{})
 
 				c.DB.Model(c.Repository{}).AddIndex("repositories_name_orgid_idx", "name", "organization_id")
 			},
