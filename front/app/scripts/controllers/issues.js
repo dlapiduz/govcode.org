@@ -70,7 +70,20 @@ angular.module('govcodeApp')
       }
     }, true);
 
-    console.log(selectedOrgs);
+    $scope.$watch('orgs', function(newOrgs, oldOrgs) {
+      var orgs = $.map(
+        newOrgs,
+        function(e) {
+          if (e.ticked) {
+            return e.name;
+          };
+      });
+
+      if (orgs.toString() != selectedOrgs.toString()) {
+        updateIssues(selectedLangs, orgs);
+        selectedOrgs = orgs;
+      }
+    }, true);
 
     updateIssues(selectedLangs, selectedOrgs);
 
