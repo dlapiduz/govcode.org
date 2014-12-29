@@ -228,11 +228,11 @@ func IssuesIndex(r render.Render, req *http.Request) {
 	}
 	if opts.languages != "" {
 		langs := strings.Split(opts.languages, ",")
-		for k, v := range langs {
-			langs[k] = "'" + v + "'"
-		}
-
-		rows = rows.Where("repositories.language = ANY (ARRAY[?])", strings.Join(langs, ","))
+		rows = rows.Where("repositories.language = ANY (ARRAY [?])", langs)
+	}
+	if opts.organizations != "" {
+		orgs := strings.Split(opts.organizations, ",")
+		rows = rows.Where("organizations.login = ANY (ARRAY [?])", orgs)
 	}
 	if opts.label != "" {
 		label := "%" + opts.label + "%"
