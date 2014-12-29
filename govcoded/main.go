@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"strings"
 	"time"
 
 	c "github.com/dlapiduz/govcode.org/common"
@@ -190,19 +191,21 @@ func IssuesIndex(r render.Render, req *http.Request) {
 	qs := req.URL.Query()
 
 	opts := struct {
-		perPage  int
-		page     int
-		repoId   int
-		orgId    int
-		language string
-		state    string
-		label    string
+		perPage       int
+		page          int
+		repoId        int
+		orgId         int
+		languages     string
+		organizations string
+		state         string
+		label         string
 	}{
 		ForceStoInt(qs.Get("perPage")),
 		ForceStoInt(qs.Get("page")),
 		ForceStoInt(qs.Get("repoId")),
 		ForceStoInt(qs.Get("orgId")),
-		qs.Get("language"),
+		qs.Get("languages"),
+		qs.Get("organizations"),
 		qs.Get("state"),
 		qs.Get("label"),
 	}
@@ -223,8 +226,13 @@ func IssuesIndex(r render.Render, req *http.Request) {
 	if opts.orgId > 0 {
 		rows = rows.Where("organizations.id = ?", opts.orgId)
 	}
-	if opts.language != "" {
-		rows = rows.Where("repositories.language = ?", opts.language)
+	if opts.languages != "" {
+		langs := strings.Split(opts.languages, ",")
+		for k, v := range langs {
+			langs[k] = "'" + v + "'"
+		}
+
+		rows = rows.Where("repositories.language = ANY (ARRAY[?])", strings.Join(langs, ","))
 	}
 	if opts.label != "" {
 		label := "%" + opts.label + "%"
