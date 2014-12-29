@@ -8,6 +8,29 @@
     to the project.
   </p>
 
+  <div>
+    <p>
+      Filter by
+      <label>Language:</label>
+      <multi-select
+          input-model="langs"
+          button-label="name"
+          item-label="name"
+          tick-property="ticked"
+      >
+      </multi-select>
+      <label>Organization</label>
+      <multi-select
+          input-model="orgs"
+          button-label="name"
+          item-label="name"
+          tick-property="ticked"
+          max-height="190px"
+      >
+      </multi-select>
+    </p>
+  </div>
+
   <h3>Latest Help Wanted Issues</h3>
 
   <table at-table at-config="config" at-list="helpWantedIssues" at-paginated class="table">

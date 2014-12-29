@@ -20,7 +20,8 @@ angular
     'chartjs',
     'angularMoment',
     'angulartics',
-    'angulartics.google.analytics'
+    'angulartics.google.analytics',
+    'multi-select'
   ])
   .config(['$routeProvider',
            '$locationProvider',
