@@ -3,6 +3,14 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/font
 @import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
 // endbower
 
+@mixin transition() {
+  -webkit-transition: all 300ms ease;
+     -moz-transition: all 300ms ease;
+      -ms-transition: all 300ms ease;
+       -o-transition: all 300ms ease;
+          transition: all 300ms ease;
+}
+
 body {
     background: #fafafa;
     font-family: 'Lato';
@@ -36,12 +44,17 @@ header h2 {
     }
 }
 
+h3 {
+  margin-top: 0;
+}
+
 header h3 {
     font-size: 20px;
     color: #DDD;
     padding: 0;
     float: left;
     font-weight: 300;
+    margin-top: 20px;
     a, a:hover, a:active, a:visited {
         color: #fff;
         text-decoration: none;
@@ -360,16 +373,37 @@ nav ul li a.current, nav ul li a:hover {
   }
 
   .banner {
-    background-color: #428BCA;
+    background-color: #1E7BCB;
     padding: 60px;
     color: #fff;
   }
   .stats {
-    margin-top: 40px;
+    margin-top: 60px;
     .stat {
+      a {
+        color: #FF6800;
+        font-size:18px;
+      }
+      a:hover {
+        text-decoration: none;
+        color: #FF9100;
+        span {
+          color: #FF9100;
+        }
+        p {
+          background-color: #FF9100;
+        }
+      }
+      p {
+        background-color: #FF6800;
+        color: #fff;
+        width: 90%;
+        margin: 0 auto;
+      }
       span {
-        color: #428BCA;
-        font-size: 50px;
+        color: #FF6800;
+        font-size: 60px;
+        line-height: 1.1;
       }
     }
   }
@@ -379,10 +413,10 @@ nav ul li a.current, nav ul li a:hover {
       text-align: center;
       position: relative;
     }
-    margin-top: 20px;
+    margin-top: 40px;
     h5 {
       font-size: 20px;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
     }
     .card {
       height: 100px;
@@ -397,9 +431,14 @@ nav ul li a.current, nav ul li a:hover {
       .card-foot {
         text-align: right;
         height: 30px;
+        background: none;
         h3 {
-          font-size: 12px;
+          font-size: 11px;
           padding: 5px;
+          padding-right: 17px;
+          a {
+            color: #999;
+          }
         }
         p {
 
@@ -409,19 +448,20 @@ nav ul li a.current, nav ul li a:hover {
   }
 
   .langs {
-    background-color: #333;
-    padding: 30px;
+    background-color: #55296B;
+    padding: 60px;
     color: #fff;
-    margin-top: 30px;
+    margin-top: 40px;
     .selector {
       width: 60%;
+      padding: 20px 0;
       margin: 0 auto;
       text-align: center;
       line-height: 30px;
       .opt {
         margin: 2px;
-        border: 1px solid #fff;
-        color: #fff;
+        border: 1px solid #eee;
+        color: #eee;
         padding: 2px 5px;
         font-size: 12px;
         cursor: pointer;
@@ -433,14 +473,19 @@ nav ul li a.current, nav ul li a:hover {
     }
 
     input[type="button"] {
-      margin: 20px auto;
+      margin: 10px auto 0;
       display: block;
-      font-size: 16px;
-      border: 1px solid #eee;
+      font-size: 20px;
+      border: 1px solid #a8b;
       background: none;
+      background-color: #a8b;
       color: #fff;
-      padding: 3px 10px;
+      padding: 10px 20px;
       cursor: pointer;
+      @include transition();
+      &:hover {
+        border-color: #fff;
+      }
     }
 
   }
@@ -451,7 +496,7 @@ nav ul li a.current, nav ul li a:hover {
     color: #fff;
     margin-top: 50px;
     label {
-      font-size: 30px;
+      font-size: 24px;
       font-weight: 300;
     }
     input[type="email"] {
@@ -462,10 +507,15 @@ nav ul li a.current, nav ul li a:hover {
     }
     input[type="submit"] {
       font-size: 20px;
-      border: 1px solid #eee;
+      border: 1px solid #666;
       background: none;
+      background-color: #666;
       color: #fff;
       padding: 3px 10px;
+      @include transition();
+      &:hover {
+        border-color: #fff;
+      }
     }
   }
 

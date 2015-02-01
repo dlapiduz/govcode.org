@@ -2,11 +2,11 @@
 
   <div class="banner">
     <h1>
-        Help the United States!
+      Code for your country!
     </h1>
 
     <h3>
-      We believe in a goverment for the hackers of the hacker and <b>by the hackers</b>.
+      We believe in a goverment of the hackers, for the hackers and <b>by the hackers</b>.
     </h3>
   </div>
 
@@ -15,16 +15,22 @@
       <div class="row-fluid">
 
         <div class="stat col-xs-4">
-          <span>{{ home_stats.UserCount }}</span>
-          <p>Contributors</p>
+          <a ng-href="/contributors">
+            <span>{{ home_stats.UserCount }}</span>
+            <p>Contributors</p>
+          </a>
         </div>
         <div class="stat col-xs-4">
-          <span>{{ home_stats.RepoCount }}</span>
-          <p>Projects</p>
+          <a ng-href="/repos">
+            <span>{{ home_stats.RepoCount }}</span>
+            <p>Projects</p>
+          </a>
         </div>
         <div class="stat col-xs-4">
-          <span>{{ home_stats.IssueCount }}</span>
-          <p>Issues</p>
+          <a ng-href="/issues">
+            <span>{{ home_stats.IssueCount }}</span>
+            <p>Issues</p>
+          </a>
         </div>
 
       </div>

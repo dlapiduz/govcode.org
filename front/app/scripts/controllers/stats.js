@@ -14,18 +14,18 @@ angular.module('govcodeApp')
       "$http",
       function ($rootScope, $scope, $http) {
 
-        var colors = ["#EA5172", 
-                      "#501367", 
-                      "#16E56D", 
-                      "#E49956", 
-                      "#AD51DE", 
-                      "#5160BB", 
-                      "#07DAF5", 
-                      "#E0E0E0", 
-                      "#F14B8E", 
-                      "#0887E5", 
-                      "#E49956", 
-                      "#F5F416", 
+        var colors = ["#EA5172",
+                      "#501367",
+                      "#16E56D",
+                      "#E49956",
+                      "#AD51DE",
+                      "#5160BB",
+                      "#07DAF5",
+                      "#E0E0E0",
+                      "#F14B8E",
+                      "#0887E5",
+                      "#E49956",
+                      "#F5F416",
                       "#F04919"];
 
         $scope.orgFilter = {};
@@ -34,16 +34,24 @@ angular.module('govcodeApp')
           showTooltips: false,
           scaleBeginAtZero: true
         }
-        
+
+        $scope.countGraphData = {
+          datasets: []
+        }
+
+        $scope.commitGraphData = {
+          datasets: []
+        }
+
         $scope.commitGraphOptions = {
           showTooltips: true,
           animation: false,
           datasetFill: false,
           multiTooltipTemplate: "<% if (datasetLabel){%><%=datasetLabel%>: <%}%><%= value %>"
         }
-        
+
         $scope.allOrgs = function(show) {
-          $.each($scope.orgFilter, function(key, val) { 
+          $.each($scope.orgFilter, function(key, val) {
             $scope.orgFilter[key] = show;
           });
         }
