@@ -14,19 +14,19 @@
     <div class="stats col-md-6 col-md-offset-3">
       <div class="row-fluid">
 
-        <div class="stat col-xs-4">
+        <div class="stat col-sm-4">
           <a ng-href="/contributors">
             <span>{{ home_stats.UserCount }}</span>
             <p>Contributors</p>
           </a>
         </div>
-        <div class="stat col-xs-4">
+        <div class="stat col-sm-4">
           <a ng-href="/repos">
             <span>{{ home_stats.RepoCount }}</span>
             <p>Projects</p>
           </a>
         </div>
-        <div class="stat col-xs-4">
+        <div class="stat col-sm-4">
           <a ng-href="/issues">
             <span>{{ home_stats.IssueCount }}</span>
             <p>Issues</p>
@@ -54,7 +54,7 @@
   <div style="clear:both;">&nbsp;</div>
 
   <div class="row-fluid latest">
-    <div class="col-xs-4">
+    <div class="col-sm-4">
       <h5>Latest Projects</h5>
       <div class="latest-repos card" ng-repeat="repo in latestRepos">
         <div class="card-head">
@@ -67,7 +67,7 @@
         </p>
       </div>
     </div>
-    <div class="col-xs-4">
+    <div class="col-sm-4">
       <h5>Latest Issues</h5>
       <div class="latest-issues card issue" ng-repeat="issue in latestIssues">
         <p>
@@ -84,7 +84,7 @@
         </div>
       </div>
     </div>
-    <div class="col-xs-4">
+    <div class="col-sm-4">
       <h5>Help Wanted Issues</h5>
       <div class="help-wanted-issues card issue" ng-repeat="issue in helpWantedIssues">
         <p>
