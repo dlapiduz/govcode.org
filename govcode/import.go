@@ -95,9 +95,9 @@ func handleErr(err error, section string, sem *chan bool, stopChan *chan bool) {
 	case *github.ErrorResponse:
 		if v.Response != nil && v.Response.StatusCode == 403 {
 			fmt.Println("No more requests")
+			*stopChan <- true
 		}
 		<-*sem
-		*stopChan <- true
 		return
 	default:
 		<-*sem
