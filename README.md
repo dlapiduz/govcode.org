@@ -10,6 +10,7 @@ Govcode is an application that lists government open source projects.
 The purpose is to track what is being worked on and build analytics on top of it.
 
 ![index page](screenshots/govcode.png "Index Page")
+![api documentation](govcoded/README.md "API documentation")
 
 ## How to run it?
 
